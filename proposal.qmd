@@ -1,5 +1,5 @@
 ---
-title: "Project 2"
+title: "Project 2 Proposal: Cartoon Character Classification using Neural Networks"
 subtitle: "Proposal"
 authors: ""
 format: html
@@ -12,7 +12,14 @@ editor: visual
 #| warning: false
 
 library(tidyverse)
+library(neuralnet)
+library(keras)
+library(tensorflow)
 ```
+
+## Goal
+
+Our project aims to develop a neural network model capable of predicting and classifying images based the brightness of individual pixels, utilizing the `neuralnet` and `keras` packages in R, in service of introducing the concept of neural networks to the class and exploring how neural networks can be trained in R, specifically in the context of computer vision and image classification.
 
 ## Dataset
 
@@ -20,11 +27,58 @@ library(tidyverse)
 #| label: load-data
 #| message: false
 
-## read data 
+# read in data
+fashion_train1 <- read_csv(file = "data/fashion_train1.csv")
+fashion_train2 <- read_csv(file = "data/fashion_train2.csv")
+fashion_test <- read_csv(file = "data/fashion-mnist_test.csv")
+
+#combine training datasets
+fashion_train<- rbind(fashion_train1, fashion_train2)
+
+# normalize pixel values to [0,1]
+fashion_train[-1] <- fashion_train[-1] / 255
+fashion_test[-1] <- fashion_test[-1] / 255
+
+#dimensions of datasets
+dim(fashion_test)
+dim(fashion_train)
 ```
 
+The dataset consists of pixel brightness for images of clothing of various types. Each observation represents an individual $28 \times 28$ grayscale image of an item of clothing, with a variable `label` indicating the type of clothing (0 - T-shirt/top; 1 - Trouser; 2 - Pullover; 3 - Dress, 4 - Coat; 5 - Sandal; 6 - Shirt; 7 - Sneaker; 8 - Bag; 9 - Ankle boot) and 784 other variables, each representing the brightness of a unique pixel in the image (ordered sequentially from left to right, top to bottom). The training dataset `fashion_train` contains 60,000 observations and the testing dataset contains 10,000 observations. We chose this data because it is easy to work with and ideal when learning about how neural networks are trained.
 
-## Reason for Choosing this Dataset
+## Motivation
 
+Neural networks represent a cornerstone of modern machine learning, offering significant power in pattern recognition, classification, and prediction tasks. Despite their widespread application across various domains, their implementation and functionality remain a mystery to many. Even to our group, of which both of us have *some* experience in neural networks, the underlying machinery is fairly opaque. We aim to demystify neural networks, showcasing their capabilities and how they can be implemented using the `neuralnet` package in R. This project not only serves an educational purpose but also demonstrates practical application in image classification, a prevalent task in AI. The goal will be to make a website and blog post, with the website hopefully being interactive so that people can get a more intuitive understanding of how neural networks work..
 
-## Questions and Analysis Plan
+## Research Question
+
+Our research question is twofold: how accurately can a simple neural network classify images of clothing into their correct categories, based on the brightness of the pixels? and what is the underlying process that allows neural networks to be trained.
+
+focuses on determining how accurately a neural network can classify images of cartoon characters into their correct categories, based on their features. We aim to explore the effectiveness of different network architectures and parameters in improving classification accuracy.
+
+## Plan of Attack
+
+After this week we have 3 weeks to complete our project and present it: so here are our goal outlines
+
+-   Week 11: train our neural networks, attempting to tune the architecture of our model such that it is simple but produces high predictive test accuracy.
+
+-   Week 12: write code for our website and link our code into the shiny app before peer review 
+
+-   Week 13: work with peer review to clean up our code for our presentation
+
+-   Week 14/15: write up with blog post
+
+## Project Repository Organization
+
+The project repository is organized as follows:
+
+-   `/_freeze` - Contains files relating to the website.
+-   `/_site` - Contains files relating to the website.
+-   `/data` - Contains the dataset of cartoon character images.
+-   `/models` - Stores the trained neural network models.
+-   `about.qmd` - Project description to appear on website
+-   `proposal.qmd` - Project proposal
+-   `index.qmd` - Project write-up
+-   `presentation.qmd` - Project presentation
+
+Each folder includes a README.md explaining the contents and structure.
