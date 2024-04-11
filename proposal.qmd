@@ -54,8 +54,6 @@ Neural networks represent a cornerstone of modern machine learning, offering sig
 
 Our research question is twofold: how accurately can a simple neural network classify images of clothing into their correct categories, based on the brightness of the pixels? and what is the underlying process that allows neural networks to be trained.
 
-focuses on determining how accurately a neural network can classify images of cartoon characters into their correct categories, based on their features. We aim to explore the effectiveness of different network architectures and parameters in improving classification accuracy.
-
 ## Plan of Attack
 
 After this week we have 3 weeks to complete our project and present it: so here are our goal outlines

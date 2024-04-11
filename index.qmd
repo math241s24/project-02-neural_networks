@@ -13,3 +13,106 @@ execute:
 ## Abstract
 
 ## Introduction
+
+```{r load-packages}
+#| label: load-pkgs
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(neuralnet)
+library(keras)
+library(tensorflow)
+```
+
+
+```{r load-data}
+#| label: load-data
+#| message: false
+
+# read in data
+fashion_train1 <- read_csv(file = "data/fashion_train1.csv")
+fashion_train2 <- read_csv(file = "data/fashion_train2.csv")
+fashion_test <- read_csv(file = "data/fashion-mnist_test.csv")
+
+#combine training datasets
+fashion_train<- rbind(fashion_train1, fashion_train2)
+
+# normalize pixel values to [0,1]
+fashion_train[-1] <- fashion_train[-1] / 255
+fashion_test[-1] <- fashion_test[-1] / 255
+
+#dimensions of datasets
+dim(fashion_test)
+dim(fashion_train)
+```
+
+
+```{r}
+model = neuralnet(
+    label~.,
+    data=fashion_train,
+    hidden=c(30,15),
+    linear.output = FALSE
+)
+```
+
+```{r}
+plot(model, rep = "best")
+```
+
+```{r}
+pred <- predict(model, fashion_test)
+labels <- c("setosa", "versicolor", "virginca")
+prediction_label <- data.frame(max.col(pred)) %>%     
+mutate(pred=labels[max.col.pred.]) %>%
+select(2) %>%
+unlist()
+
+table(test_data$Species, prediction_label)
+```
+
+```{r}
+y_train <- fashion_train[,1]
+x_train <- fashion_train[,-1]
+
+y_test <- fashion_test[,1]
+x_test <- fashion_test[,-1]
+```
+
+```{r}
+model <- keras_model_sequential()%>%
+  # Start with a hidden 2D convolutional layer
+  layer_conv_2d(
+    filter = 16, kernel_size = c(3,3), padding = "same",
+    input_shape = c(28, 28, 3), activation = 'leaky_relu'
+  ) %>%
+
+  # 2nd hidden layer
+  layer_conv_2d(filter = 32, kernel_size = c(3,3), activation = 'leaky_relu') %>%
+ 
+
+  # Use max pooling
+  layer_max_pooling_2d(pool_size = c(2,2)) %>%
+  layer_dropout(0.25) %>%
+
+  # 3rd and 4th hidden 2D convolutional layers
+  layer_conv_2d(filter = 32, kernel_size = c(3,3), padding = "same", activation = 'leaky_relu') %>%
+
+  layer_conv_2d(filter = 64, kernel_size = c(3,3), activation = 'leaky_relu') %>%
+
+  # Use max pooling
+  layer_max_pooling_2d(pool_size = c(2,2)) %>%
+  layer_dropout(0.25) %>%
+ 
+  # Flatten max filtered output into feature vector
+  # and feed into dense layer
+  layer_flatten() %>%
+  layer_dense(256, activation = 'leaky_relu') %>%
+  layer_dropout(0.5) %>%
+
+  # Outputs from dense layer
+  layer_dense(10, activation = 'softmax')
+```
+
+
