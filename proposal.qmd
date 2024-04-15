@@ -225,7 +225,7 @@ history3 <- model3 %>% fit(
 
 ```
 
-```{r }
+```{r}
 
 # read in data
 fashion_train1 <- read_csv(file = "data/fashion_train1.csv")

@@ -26,93 +26,260 @@ library(tensorflow)
 ```
 
 
+
 ```{r load-data}
 #| label: load-data
 #| message: false
 
-# read in data
-fashion_train1 <- read_csv(file = "data/fashion_train1.csv")
-fashion_train2 <- read_csv(file = "data/fashion_train2.csv")
-fashion_test <- read_csv(file = "data/fashion-mnist_test.csv")
 
-#combine training datasets
-fashion_train<- rbind(fashion_train1, fashion_train2)
+genGauss <- function(cx, cy, num_samples, variance, label) {
+  x <- rnorm(num_samples, mean = cx, sd = sqrt(variance))
+  y <- rnorm(num_samples, mean = cy, sd = sqrt(variance))
+  data.frame(x = x, y = y, label = label)
+}
 
-# normalize pixel values to [0,1]
-fashion_train[-1] <- fashion_train[-1] / 255
-fashion_test[-1] <- fashion_test[-1] / 255
+#generates two clusters of data points
+classifyTwoGaussData <- function(num_samples, noise) {
+  variance_scale <- function(noise) {
+    (1 - noise) * 0.5 + noise * 4
+  }
+  variance <- variance_scale(noise)
+  
+  points1 <- genGauss(2, 2, num_samples / 2, variance, 'b')
+  points2 <- genGauss(-2, -2, num_samples / 2, variance, 'a')
+  
+  # Combine  datasets
+  points <- rbind(points1, points2)
+  return(points)
+}
 
-#dimensions of datasets
-dim(fashion_test)
-dim(fashion_train)
+
+set.seed(123) 
+data_two <- classifyTwoGaussData(1000, 0.1)
+
+# show data
+ggplot(data_two, aes(x = x, y = y, color = factor(label))) +
+  geom_point(alpha = 0.6) +
+  labs(title = "Classify Two Gauss Data", color = "Label") +
+  theme_minimal()
+
 ```
 
+```{r}
+
+generateDataByX <- function(num_samples) {
+  x <- runif(num_samples, min = -5, max = 5)
+  y <- runif(num_samples, min = -5, max = 5) 
+  label <- ifelse(x >= 0, 'a', 'b')              
+  
+  data <- data.frame(x = x, y = y, label = label)
+  return(data)
+}
+
+set.seed(123) 
+data_by_x <- generateDataByX(1000)
+
+#plot
+ggplot(data_by_x, aes(x = x, y = y, color = factor(label))) +
+  geom_point(alpha = 0.6) +
+  labs(title = "Data Classified by X Value", color = "Label") +
+  theme_minimal()
+```
 
 ```{r}
-model = neuralnet(
-    label~.,
-    data=fashion_train,
-    hidden=c(30,15),
+generateDataByXYProduct <- function(num_samples) {
+  x <- runif(num_samples, min = -5, max = 5) 
+  y <- runif(num_samples, min = -5, max = 5)
+  label <- ifelse(x * y >= 0, 'b', 'a')         
+  
+  data <- data.frame(x = x, y = y, label = label)
+  return(data)
+}
+
+set.seed(123) 
+data_by_xy <- generateDataByXYProduct(1000)
+
+ggplot(data_by_xy, aes(x = x, y = y, color = factor(label))) +
+  geom_point(alpha = 0.6) +
+  labs(title = "Data Classified by XY Product", color = "Label") +
+  theme_minimal()
+
+
+```
+
+```{r}
+train_test_split <- function(data) {
+  # Calculate the number of rows for the training data (80% of total rows)
+  data_rows <- floor(0.80 * nrow(data))
+  
+  # Randomly sample indices for the training data
+  train_indices <- sample(1:nrow(data), data_rows)
+  
+  # Subset the data into training and testing sets based on the indices
+  train_data <- data[train_indices, ]
+  test_data <- data[-train_indices, ]
+  
+  # Return a list containing both datasets
+  return(list(train = train_data, test = test_data))
+}
+```
+
+```{r}
+set.seed(2)
+split_data1 <- train_test_split(data_two)
+train1 <- split_data1$train
+test1 <- split_data1$test
+
+split_data2 <- train_test_split(data_by_x)
+train2 <- split_data2$train
+test2 <- split_data2$test
+
+split_data3 <- train_test_split(data_by_xy)
+train3 <- split_data3$train
+test3 <- split_data3$test
+```
+
+```{r}
+model1 = neuralnet(
+    label~x + y,
+    data=train1,
+    hidden=c(5,5),
     linear.output = FALSE
 )
 ```
 
 ```{r}
-plot(model, rep = "best")
+plot(model1, rep = "best")
 ```
 
 ```{r}
-pred <- predict(model, fashion_test)
-labels <- c("setosa", "versicolor", "virginca")
+pred <- predict(model1, test1)
+labels <- c("a", "b")
 prediction_label <- data.frame(max.col(pred)) %>%     
 mutate(pred=labels[max.col.pred.]) %>%
 select(2) %>%
 unlist()
 
-table(test_data$Species, prediction_label)
+table(test1$label, prediction_label)
 ```
 
 ```{r}
-y_train <- fashion_train[,1]
-x_train <- fashion_train[,-1]
-
-y_test <- fashion_test[,1]
-x_test <- fashion_test[,-1]
+check = ifelse(test1$label == 'a', 1, 2) == max.col(pred)
+accuracy = (sum(check)/nrow(test1))*100
+print(accuracy)
 ```
 
 ```{r}
-model <- keras_model_sequential()%>%
-  # Start with a hidden 2D convolutional layer
-  layer_conv_2d(
-    filter = 16, kernel_size = c(3,3), padding = "same",
-    input_shape = c(28, 28, 3), activation = 'leaky_relu'
-  ) %>%
-
-  # 2nd hidden layer
-  layer_conv_2d(filter = 32, kernel_size = c(3,3), activation = 'leaky_relu') %>%
- 
-
-  # Use max pooling
-  layer_max_pooling_2d(pool_size = c(2,2)) %>%
-  layer_dropout(0.25) %>%
-
-  # 3rd and 4th hidden 2D convolutional layers
-  layer_conv_2d(filter = 32, kernel_size = c(3,3), padding = "same", activation = 'leaky_relu') %>%
-
-  layer_conv_2d(filter = 64, kernel_size = c(3,3), activation = 'leaky_relu') %>%
-
-  # Use max pooling
-  layer_max_pooling_2d(pool_size = c(2,2)) %>%
-  layer_dropout(0.25) %>%
- 
-  # Flatten max filtered output into feature vector
-  # and feed into dense layer
-  layer_flatten() %>%
-  layer_dense(256, activation = 'leaky_relu') %>%
-  layer_dropout(0.5) %>%
-
-  # Outputs from dense layer
-  layer_dense(10, activation = 'softmax')
+model2 = neuralnet(
+    label~x + y,
+    data=train2,
+    hidden=c(5,5),
+    linear.output = FALSE
+)
 ```
+
+```{r}
+plot(model2, rep = "best")
+```
+
+```{r}
+pred <- predict(model2, test2)
+labels <- c("a", "b")
+prediction_label <- data.frame(max.col(pred)) %>%     
+mutate(pred=labels[max.col.pred.]) %>%
+select(2) %>%
+unlist()
+
+table(test2$label, prediction_label)
+```
+
+```{r}
+check = ifelse(test2$label == 'a', 1, 2) == max.col(pred)
+accuracy = (sum(check)/nrow(test1))*100
+print(accuracy)
+```
+
+```{r}
+model3 = neuralnet(
+    label~x + y,
+    data=train3,
+    hidden=c(5,5),
+    linear.output = FALSE
+)
+```
+
+```{r}
+plot(model3, rep = "best")
+```
+
+```{r}
+pred <- predict(model3, test3)
+labels <- c("a", "b")
+prediction_label <- data.frame(max.col(pred)) %>%     
+mutate(pred=labels[max.col.pred.]) %>%
+select(2) %>%
+unlist()
+
+table(test3$label, prediction_label)
+```
+
+```{r}
+check = ifelse(test3$label == 'a', 1, 2) == max.col(pred)
+accuracy = (sum(check)/nrow(test1))*100
+print(accuracy)
+```
+
+```{r}
+generate_grid <- function(data) {
+  x_range <- seq(min(data$x) - 1, max(data$x) + 1, length.out = 200)
+  y_range <- seq(min(data$y) - 1, max(data$y) + 1, length.out = 200)
+  
+  grid <- expand.grid(x = x_range, y = y_range)
+  return(grid)
+}
+
+grid1 <- generate_grid(data_two)
+grid2 <- generate_grid(data_by_x)
+grid3 <- generate_grid(data_by_xy)
+```
+
+```{r}
+predict_grid <- function(model, grid) {
+  grid$pred <- predict(model, grid)
+  grid$pred_label <- ifelse(grid$pred[,1] > grid$pred[,2], 'a', 'b')
+  return(grid)
+}
+
+grid1$pred_label <- predict_grid(model1, grid1)$pred_label
+grid2$pred_label <- predict_grid(model2, grid2)$pred_label
+grid3$pred_label <- predict_grid(model3, grid3)$pred_label
+```
+
+```{r}
+plot_prediction <- function(grid, data, title) {
+  ggplot() +
+    geom_tile(data = grid, aes(x = x, y = y, fill = pred_label), alpha = 0.5) +
+    geom_point(data = data, aes(x = x, y = y, color = label), alpha = 0.8) +
+    scale_fill_manual(values = c('a' = 'blue', 'b' = 'red')) +
+    scale_color_manual(values = c('a' = 'blue', 'b' = 'red')) +
+    labs(title = title, fill = "Predicted Label", color = "Actual Label") +
+    theme_minimal()
+}
+
+# Plot for each dataset
+p1 <- plot_prediction(grid1, data_two, "Model 1 Predictions")
+p2 <- plot_prediction(grid2, data_by_x, "Model 2 Predictions")
+p3 <- plot_prediction(grid3, data_by_xy, "Model 3 Predictions")
+
+# Print the plots
+print(p1)
+print(p2)
+print(p3)
+```
+
+
+
+
+
 
 
