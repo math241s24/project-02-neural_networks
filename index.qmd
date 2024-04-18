@@ -338,8 +338,7 @@ server <- function(input, output) {
     
     
 
-    if (input$learningRate == "default")
-      if (input$HiddenLayers == "default")
+     if (input$learningRate == "default" && input$HiddenLayers == "default")
         if (input$dataset == "Gaussian distribution") {
           p1
         } else if (input$dataset == "Horizontal split") {
