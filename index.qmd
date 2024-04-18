@@ -19,6 +19,10 @@ library(tidyverse)
 library(neuralnet)
 library(keras)
 library(tensorflow)
+library(shiny)
+library(ggplot2)
+library(neuralnet)
+library(dplyr)
 ```
 
 
@@ -259,7 +263,6 @@ predict_grid <- function(model, grid) {
   grid$pred_label <- ifelse(grid$pred[,1] > grid$pred[,2], 'a', 'b')
   return(grid)
 }
-
 grid1$pred_label <- predict_grid(model1, grid1)$pred_label
 grid2$pred_label <- predict_grid(model2, grid2)$pred_label
 grid3$pred_label <- predict_grid(model3, grid3)$pred_label
@@ -279,6 +282,7 @@ plot_prediction <- function(grid, data, title) {
     theme_minimal()
 }
 
+
 p1 <- plot_prediction(grid1, data_two, "Model 1 Predictions")
 p2 <- plot_prediction(grid2, data_by_x, "Model 2 Predictions")
 p3 <- plot_prediction(grid3, data_by_xy, "Model 3 Predictions")
@@ -292,3 +296,121 @@ print(p4)
 
 
 ```
+```{r}
+
+ui <- fluidPage(
+  titlePanel("Basic Neural Networks Visualization"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("dataset", "Choose a dataset:", choices = c("Gaussian distribution", 
+                                                             "Horizontal split", 
+                                                             "Quadrants", 
+                                                             "Spiral data")),
+      
+      selectInput("learningRate", "Choose Learning rate", choices = c("default",
+                                                             "0.01", 
+                                                             "0.003", 
+                                                             "0.001", 
+                                                             "0.0003",
+                                                             "0.0001")),
+      
+      selectInput("HiddenLayers", "Choose Number of hidden layers:", choices = c("default",
+                                                             "0.01", 
+                                                             "0.003", 
+                                                             "0.001", 
+                                                             "0.0003",
+                                                             "0.0001")),
+      
+    ),
+    mainPanel(
+      plotOutput("scatterPlot")
+    )
+  )
+)
+
+
+#add        stepmax=1e+06
+# Define the server logic
+server <- function(input, output) {
+
+  output$scatterPlot <- renderPlot({
+    
+    
+    
+
+    if (input$learningRate == "default")
+      if (input$HiddenLayers == "default")
+        if (input$dataset == "Gaussian distribution") {
+          p1
+        } else if (input$dataset == "Horizontal split") {
+          p2
+        } else if (input$dataset == "Quadrants") {
+          p3
+        } else if (input$dataset == "Spiral data") {
+          p4
+        }
+    else
+        if  (input$HiddenLayers == "default")
+          if (input$dataset == "Gaussian distribution") {
+            model <- neuralnet(label~x+y, data=train1, hidden=c(5,5), learningrate=learning_rate,        linear.output=FALSE)
+            grid <- generate_grid(data_two)
+            grid$pred_label <- predict_grid(model, grid)$pred_label
+            plot_prediction(grid, data_two, "Model Predictions with LR = " + toString(learning_rate) + ", Hidden Layers = " + toString(length(hidden_layers)))
+          
+          } else if (input$dataset == "Horizontal split") {
+            p2
+          } else if (input$dataset == "Quadrants") {
+            p3
+          } else if (input$dataset == "Spiral data") {
+            p4
+          }
+    #need to update
+        else 
+            if (input$dataset == "Gaussian distribution") {
+             model1 <- neuralnet(label~x+y, data=train1, hidden=c(5,5), learningrate=input$learningRate, linear.output=FALSE)
+          
+          } else if (input$dataset == "Horizontal split") {
+            p2
+          } else if (input$dataset == "Quadrants") {
+            p3
+          } else if (input$dataset == "Spiral data") {
+            p4
+          }
+  })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+
+```
+
+
+```{r, eval = FALSE}
+# Load libraries
+library(shiny)
+
+# User interface
+ui <- fluidPage(
+  titlePanel(),
+  sidebarLayout(
+    sidebarPanel(
+    ),
+    mainPanel(
+    )
+  )
+)
+
+# Server function
+server <- function(input, output){}
+
+# Creates app
+shinyApp(ui = ui, server = server)
+
+```
+
+
+```{r}
+
+```
+
