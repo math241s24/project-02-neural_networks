@@ -1,7 +1,7 @@
 ---
-title: "Project title"
+title: "Neural Networks"
 subtitle: "Project 2"
-author: "Team"
+author: "Elliott Chang, Cameron Adams"
 title-slide-attributes:
   data-slide-number: none
 format: revealjs
@@ -35,3 +35,5 @@ knitr::opts_chunk$set(
 #| label: load-data
 #| include: false
 ```
+
+## Introduction
