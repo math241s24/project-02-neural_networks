@@ -144,9 +144,9 @@ test4 <- split_data4$test
 
 
 ```{r}
+set.seed(932)
 model1 <- neuralnet(label~x+y, data=train1, hidden=c(5,5), linear.output=FALSE)
 plot(model1, rep="best")
-
 ```
 
 
@@ -166,14 +166,13 @@ table(test1$label, prediction_label)
 check <- ifelse(test1$label == 'a', 1, 2) == max.col(pred)
 accuracy <- (sum(check)/nrow(test1))*100
 print(accuracy)
-
 ```
 
 
 ```{r}
+set.seed(932)
 model2 <- neuralnet(label~x+y, data=train2, hidden=c(5,5), linear.output=FALSE)
 plot(model2, rep="best")
-
 ```
 
 
@@ -198,12 +197,14 @@ print(accuracy)
 
 
 ```{r}
+set.seed(932)
 model3 <- neuralnet(label~x+y, data=train3, hidden=c(5,5), linear.output=FALSE)
 plot(model3, rep="best")
 
 ```
 
 ```{r}
+set.seed(932)
 pred <- predict(model3, test3)
 labels <- c("a", "b")
 prediction_label <- data.frame(max.col(pred)) %>%
@@ -222,6 +223,25 @@ print(accuracy)
 
 ```
 ```{r}
+set.seed(932)
+
+model4_no_layers <- neuralnet(
+    label~x + y,
+    data=train4,
+    linear.output=FALSE,
+    learningrate=0.001,
+    stepmax=1e+06
+)
+
+model4_5node_layer <- neuralnet(
+    label~x + y,
+    data=train4,
+    hidden=c(5),
+    linear.output=FALSE,
+    learningrate=0.001,
+    stepmax=1e+06
+)
+
 model4 <- neuralnet(
     label~x + y,
     data=train4,
@@ -230,6 +250,22 @@ model4 <- neuralnet(
     learningrate=0.001,
     stepmax=1e+06
 )
+
+pred <- predict(model4_no_layers, test4)
+labels <- c("a", "b")
+prediction_label <- data.frame(max.col(pred)) %>%
+  mutate(pred=labels[max.col(pred)]) %>%
+  select(2) %>%
+  unlist()
+table(test4$label, prediction_label)
+
+pred <- predict(model4_5node_layer, test4)
+labels <- c("a", "b")
+prediction_label <- data.frame(max.col(pred)) %>%
+  mutate(pred=labels[max.col(pred)]) %>%
+  select(2) %>%
+  unlist()
+table(test4$label, prediction_label)
 
 pred <- predict(model4, test4)
 labels <- c("a", "b")
@@ -253,7 +289,8 @@ grid1 <- generate_grid(data_two)
 grid2 <- generate_grid(data_by_x)
 grid3 <- generate_grid(data_by_xy)
 grid4 <- generate_grid(spiral_data)
-
+grid4_no_layers <- generate_grid(spiral_data)
+grid4_5node_layer <- generate_grid(spiral_data)
 
 ```
 
@@ -268,7 +305,9 @@ grid2$pred_label <- predict_grid(model2, grid2)$pred_label
 grid3$pred_label <- predict_grid(model3, grid3)$pred_label
 grid4$pred_label <- predict_grid(model4, grid4)$pred_label
 
+grid4_no_layers$pred_label <- predict_grid(model4_no_layers, grid4)$pred_label
 
+grid4_5node_layer$pred_label <- predict_grid(model4_5node_layer, grid4)$pred_label
 ```
 
 ```{r}
@@ -286,16 +325,19 @@ plot_prediction <- function(grid, data, title) {
 p1 <- plot_prediction(grid1, data_two, "Model 1 Predictions")
 p2 <- plot_prediction(grid2, data_by_x, "Model 2 Predictions")
 p3 <- plot_prediction(grid3, data_by_xy, "Model 3 Predictions")
-p4 <- plot_prediction(grid4, spiral_data, "Model 3 Predictions")
+p4 <- plot_prediction(grid4, spiral_data, "Model 4 Predictions")
+p4_no_layers <- plot_prediction(grid4_no_layers, spiral_data, "Model 3 Predictions")
+p4_5node_layer <- plot_prediction(grid4_5node_layer, spiral_data, "Model 3 Predictions")
 
 
 print(p1)
 print(p2)
 print(p3)
 print(p4)
-
-
+p4_no_layers
+p4_5node_layer
 ```
+
 ```{r}
 
 ui <- fluidPage(
@@ -381,35 +423,6 @@ server <- function(input, output) {
 # Run the application 
 shinyApp(ui = ui, server = server)
 
-
-```
-
-
-```{r, eval = FALSE}
-# Load libraries
-library(shiny)
-
-# User interface
-ui <- fluidPage(
-  titlePanel(),
-  sidebarLayout(
-    sidebarPanel(
-    ),
-    mainPanel(
-    )
-  )
-)
-
-# Server function
-server <- function(input, output){}
-
-# Creates app
-shinyApp(ui = ui, server = server)
-
-```
-
-
-```{r}
 
 ```
 
