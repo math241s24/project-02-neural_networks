@@ -1,12 +1,16 @@
 {
-  "hash": "db259544fb70801276df520cf81aea96",
+  "hash": "81b034410510772012fd8a1a125696df",
   "result": {
-    "markdown": "---\ntitle: \"Project title\"\nsubtitle: \"Project 2\"\nauthor: \"Team\"\ntitle-slide-attributes:\n  data-slide-number: none\nformat: revealjs\neditor: visual\nexecute:\n  echo: false\n---\n\n\n\n\n\n\n",
+    "markdown": "---\ntitle: \"Neural Networks\"\nsubtitle: \"Project 2\"\nauthor: \"Elliott Chang, Cameron Adams\"\ntitle-slide-attributes:\n  data-slide-number: none\nformat: revealjs\neditor: visual\nexecute:\n  echo: false\n---\n\n\n\n\n\n\n\n\n## Introduction\n\nWe plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.\n\n-   For the sake of this project, we decided to focus on classification\n\n-   \n\n## The data: \n\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.\n\n-   Each dataset contains two continuous predictor variables `x` and `y`, and one categorical response variable `label` with factors `a` and `b`.\n\n-   Two coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be\n\n    -   Despite the intuitive nature of the relationships, modeling them is quite difficult using tools that we've learned about so far in this class\n\n## What is a Neural Network?\n",
     "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"
     ],
-    "includes": {},
+    "includes": {
+      "include-after-body": [
+        "\n<script>\n  // htmlwidgets need to know to resize themselves when slides are shown/hidden.\n  // Fire the \"slideenter\" event (handled by htmlwidgets.js) when the current\n  // slide changes (different for each slide format).\n  (function () {\n    // dispatch for htmlwidgets\n    function fireSlideEnter() {\n      const event = window.document.createEvent(\"Event\");\n      event.initEvent(\"slideenter\", true, true);\n      window.document.dispatchEvent(event);\n    }\n\n    function fireSlideChanged(previousSlide, currentSlide) {\n      fireSlideEnter();\n\n      // dispatch for shiny\n      if (window.jQuery) {\n        if (previousSlide) {\n          window.jQuery(previousSlide).trigger(\"hidden\");\n        }\n        if (currentSlide) {\n          window.jQuery(currentSlide).trigger(\"shown\");\n        }\n      }\n    }\n\n    // hookup for slidy\n    if (window.w3c_slidy) {\n      window.w3c_slidy.add_observer(function (slide_num) {\n        // slide_num starts at position 1\n        fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);\n      });\n    }\n\n  })();\n</script>\n\n"
+      ]
+    },
     "engineDependencies": {},
     "preserve": {},
     "postProcess": true

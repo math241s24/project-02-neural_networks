@@ -47,5 +47,26 @@
     "title": "",
     "section": "Introduction",
     "text": "Introduction"
+  },
+  {
+    "objectID": "presentation.html#introduction",
+    "href": "presentation.html#introduction",
+    "title": "Neural Networks",
+    "section": "Introduction",
+    "text": "Introduction\nWe plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.\n\nFor the sake of this project, we decided to focus on classification"
+  },
+  {
+    "objectID": "presentation.html#the-data",
+    "href": "presentation.html#the-data",
+    "title": "Neural Networks",
+    "section": "The data:",
+    "text": "The data:\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.\n\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nTwo coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be\n\nDespite the intuitive nature of the relationships, modeling them is quite difficult using tools that we’ve learned about so far in this class"
+  },
+  {
+    "objectID": "presentation.html#what-is-a-neural-network",
+    "href": "presentation.html#what-is-a-neural-network",
+    "title": "Neural Networks",
+    "section": "What is a Neural Network?",
+    "text": "What is a Neural Network?"
   }
 ]

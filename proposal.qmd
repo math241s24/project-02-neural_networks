@@ -13,11 +13,6 @@ editor: visual
 
 library(tidyverse)
 library(neuralnet)
-library(keras)
-library(tensorflow)
-
-
-keras::install_keras(tensorflow = "gpu") 
 ```
 
 ## Goal

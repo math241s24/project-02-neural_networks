@@ -37,3 +37,21 @@ knitr::opts_chunk$set(
 ```
 
 ## Introduction
+
+We plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.
+
+-   For the sake of this project, we decided to focus on classification
+
+-   
+
+## The data: 
+
+To illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.
+
+-   Each dataset contains two continuous predictor variables `x` and `y`, and one categorical response variable `label` with factors `a` and `b`.
+
+-   Two coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be
+
+    -   Despite the intuitive nature of the relationships, modeling them is quite difficult using tools that we've learned about so far in this class
+
+## What is a Neural Network?
