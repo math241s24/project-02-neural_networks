@@ -10,9 +10,11 @@ execute:
   message: false
 ---
 
+
 ## Abstract
 
 ## Introduction
+
 
 ```{r load-packages, label="load-pkgs", message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -317,8 +319,8 @@ p1 <- plot_prediction(grid1, data_two, "Model 1 Predictions")
 p2 <- plot_prediction(grid2, data_by_x, "Model 2 Predictions")
 p3 <- plot_prediction(grid3, data_by_xy, "Model 3 Predictions")
 p4 <- plot_prediction(grid4, spiral_data, "Model 4 Predictions")
-p4_no_layers <- plot_prediction(grid4_no_layers, spiral_data, "Model 4.no layers Predictions")
-p4_5node_layer <- plot_prediction(grid4_5node_layer, spiral_data, "Model 4. 5 layer Predictions")
+p4_no_layers <- plot_prediction(grid4_no_layers, spiral_data, "Model 3 Predictions")
+p4_5node_layer <- plot_prediction(grid4_5node_layer, spiral_data, "Model 3 Predictions")
 
 
 print(p1)
@@ -332,29 +334,28 @@ p4_5node_layer
 ```{r}
 
 ui <- fluidPage(
-  titlePanel("Neural Networks Visualization"),
+  titlePanel("Basic Neural Networks Visualization"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("dataset", "Choose a dataset:", choices = c("Gaussian distribution" = "data_two",
-                                                             "Horizontal split" = "data_by_x", 
-                                                             "Quadrants" = "data_by_xy", 
-                                                             "Spiral data" = "spiral_data")),
+      selectInput("dataset", "Choose a dataset:", choices = c("Gaussian distribution", 
+                                                             "Horizontal split", 
+                                                             "Quadrants", 
+                                                             "Spiral data")),
+      
       selectInput("learningRate", "Choose Learning rate", choices = c("default",
-                                                                      "0.3", 
-                                                                      "0.01", 
-                                                                      "0.003", 
-                                                                      "0.001", 
-                                                                      "0.0003",
-                                                                      "0.0001")),
+                                                             "0.01", 
+                                                             "0.003", 
+                                                             "0.001", 
+                                                             "0.0003",
+                                                             "0.0001")),
+      
       selectInput("HiddenLayers", "Choose Number of hidden layers:", choices = c("default",
-                                                                                 "3", 
-                                                                                 "4", 
-                                                                                 "5",
-                                                                                 "6",
-                                                                                 "7",
-                                                                                 "8",
-                                                                                 "9")),
-      actionButton("runModel", "Run Model")
+                                                             "0.01", 
+                                                             "0.003", 
+                                                             "0.001", 
+                                                             "0.0003",
+                                                             "0.0001")),
+      
     ),
     mainPanel(
       plotOutput("scatterPlot")
@@ -362,59 +363,59 @@ ui <- fluidPage(
   )
 )
 
+
+#add        stepmax=1e+06
+# Define the server logic
 server <- function(input, output) {
-  plotData <- reactive({
+
+  output$scatterPlot <- renderPlot({
     
-    #basic pulls with default from above
-    if (input$HiddenLayers == "default" && input$learningRate == "default") {
-      # Choose which pre-generated plot to display based on the dataset
-      if (input$dataset == "data_two") {
-        p1
-      } else if (input$dataset == "data_by_x") {
-        p2
-      } else if (input$dataset == "data_by_xy") {
-        p3
-      } else {  # "spiral_data"
-        p4
-      }
-    } else {
-      
-      # Convert numeric if not 'default'
-      hidden_layers <- ifelse(input$HiddenLayers != "default", rep(as.numeric(input$HiddenLayers), 2), c(5,5))
-      learning_rate <- ifelse(input$learningRate != "default", as.numeric(input$learningRate), 0.01)
+    
+    
 
-      
-      # Dynamic model function
-      run_model <- function(data, 
-                            hidden=hidden_layers,
-                            rate=learning_rate) {
-                                                 neuralnet(label~x+y, 
-                                                 data=data, 
-                                                 hidden=hidden,
-                                                 learningrate=rate,
-                                                 linear.output=FALSE, 
-                                                 stepmax=1e+06)
-      }
-
-      data_list <- list(data_two = train1, data_by_x = train2, data_by_xy = train3, spiral_data = train4)
-
-      model <- run_model(data_list[[input$dataset]])
-
-      
-      grid <- generate_grid(data_list[[input$dataset]])
-      grid$pred_label <- predict_grid(model, grid)$pred_label
-      plot_prediction(grid, data_list[[input$dataset]], paste("Model Predictions with LR =", learning_rate, ", Hidden Layers =", toString(hidden_layers)))
-    }
+     if (input$learningRate == "default" && input$HiddenLayers == "default")
+        if (input$dataset == "Gaussian distribution") {
+          p1
+        } else if (input$dataset == "Horizontal split") {
+          p2
+        } else if (input$dataset == "Quadrants") {
+          p3
+        } else if (input$dataset == "Spiral data") {
+          p4
+        }
+    else
+        if  (input$HiddenLayers == "default")
+          if (input$dataset == "Gaussian distribution") {
+            model <- neuralnet(label~x+y, data=train1, hidden=c(5,5), learningrate=learning_rate,        linear.output=FALSE)
+            grid <- generate_grid(data_two)
+            grid$pred_label <- predict_grid(model, grid)$pred_label
+            plot_prediction(grid, data_two, "Model Predictions with LR = " + toString(learning_rate) + ", Hidden Layers = " + toString(length(hidden_layers)))
+          
+          } else if (input$dataset == "Horizontal split") {
+            p2
+          } else if (input$dataset == "Quadrants") {
+            p3
+          } else if (input$dataset == "Spiral data") {
+            p4
+          }
+    #need to update
+        else 
+            if (input$dataset == "Gaussian distribution") {
+             model1 <- neuralnet(label~x+y, data=train1, hidden=c(5,5), learningrate=input$learningRate, linear.output=FALSE)
+          
+          } else if (input$dataset == "Horizontal split") {
+            p2
+          } else if (input$dataset == "Quadrants") {
+            p3
+          } else if (input$dataset == "Spiral data") {
+            p4
+          }
   })
-
-  # Only update the output plot when the button is clicked, doesnt really work
-  observeEvent(input$runModel, {
-    output$scatterPlot <- renderPlot({
-      plotData()
-    })
-  }, ignoreInit = TRUE)
 }
 
+# Run the application 
 shinyApp(ui = ui, server = server)
 
+
 ```
+
