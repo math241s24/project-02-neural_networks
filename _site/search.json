@@ -60,7 +60,7 @@
     "href": "presentation.html#the-data",
     "title": "Neural Networks",
     "section": "The data:",
-    "text": "The data:\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.\n\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nTwo coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be\n\nDespite the intuitive nature of the relationships, modeling them is quite difficult using tools that we’ve learned about so far in this class"
+    "text": "The data:\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.\n\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nTwo coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be"
   },
   {
     "objectID": "presentation.html#what-is-a-neural-network",
@@ -68,5 +68,12 @@
     "title": "Neural Networks",
     "section": "What is a Neural Network?",
     "text": "What is a Neural Network?"
+  },
+  {
+    "objectID": "presentation.html#the-data-continued",
+    "href": "presentation.html#the-data-continued",
+    "title": "Neural Networks",
+    "section": "The Data (Continued)",
+    "text": "The Data (Continued)\n\n\nDespite the intuitive nature of the relationships, modeling them is quite difficult using tools that we’ve learned about so far in this class"
   }
 ]
