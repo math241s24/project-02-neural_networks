@@ -177,3 +177,73 @@ Testing a neural network in the context of classification tasks involves
     -   Sensitivity?
 
 ## Using our data...
+
+Want to add code chunks with tabs
+
+```{r}
+#| echo: false
+train_test_split <- function(data) {
+  data_rows <- floor(0.80 * nrow(data))
+  train_indices <- sample(1:nrow(data), data_rows)
+  train_data <- data[train_indices, ]
+  test_data <- data[-train_indices, ]
+  return(list(train=train_data, test=test_data))
+}
+
+set.seed(2)
+split_data1 <- train_test_split(data_two)
+train1 <- split_data1$train
+test1 <- split_data1$test
+split_data2 <- train_test_split(data_by_x)
+train2 <- split_data2$train
+test2 <- split_data2$test
+split_data3 <- train_test_split(data_by_xy)
+train3 <- split_data3$train
+test3 <- split_data3$test
+split_data4 <- train_test_split(spiral_data)
+train4 <- split_data4$train
+test4 <- split_data4$test
+```
+
+::: panel-tabset
+
+## bye
+```{r}
+#| label: confusion-matrix
+#| warning: false
+#| message: false
+
+library(neuralnet)
+model4 <- neuralnet(
+    label~x + y,
+    data=train4,
+    hidden=c(8,8),
+    linear.output=FALSE,
+    learningrate=0.001,
+    stepmax=1e+06
+)
+
+pred <- predict(model4, test4)
+labels <- c("a", "b")
+prediction_label <- data.frame(max.col(pred)) %>%
+  mutate(pred=labels[max.col(pred)]) %>%
+  select(2) %>%
+  unlist()
+table(test4$label, prediction_label)
+```
+
+## hi
+```{r}
+#| label: defnw
+#| echo: false
+table(test4$label, prediction_label)
+```
+
+
+:::
+
+## Conclusion
+
+-   Neural Networks are extremely powerful, especially in the context of classification
+
+-   Neural Networks are significantly more flexible than other algorithms
