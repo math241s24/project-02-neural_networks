@@ -54,5 +54,33 @@
     "title": "Neural Networks",
     "section": "Conclusion",
     "text": "Conclusion\n\nNeural Networks are extremely powerful, especially in the context of classification\nNeural Networks are significantly more flexible than other algorithms"
+  },
+  {
+    "objectID": "presentation.html#gauss-model",
+    "href": "presentation.html#gauss-model",
+    "title": "Neural Networks",
+    "section": "Gauss Model",
+    "text": "Gauss Model\n\nCodeArchitecturePredictions\n\n\n\nlibrary(neuralnet)\nmodel1 &lt;- neuralnet(\n  label~x+y, \n  data=train1, \n  hidden=c(5,5), \n  linear.output=FALSE)\n\n\n\n   prediction_label\n      a   b\n  a 113   0\n  b   0  87\n\n\n# A tibble: 1 × 1\n  accuracy\n     &lt;dbl&gt;\n1      100"
+  },
+  {
+    "objectID": "presentation.html#spiral-model",
+    "href": "presentation.html#spiral-model",
+    "title": "Neural Networks",
+    "section": "Spiral Model",
+    "text": "Spiral Model\n\nCodePredictions\n\n\n\nlibrary(neuralnet)\nmodel4 &lt;- neuralnet(\n    label~x + y,\n    data=train4, \n    hidden=c(8,8), #two hidden layers with 8 nodes each\n    linear.output=FALSE,\n    learningrate=0.001,\n    stepmax=1e+06\n)\n\n\n\n   prediction_label\n     a  b\n  a 94  3\n  b  8 95\n\n\n# A tibble: 1 × 1\n  accuracy\n     &lt;dbl&gt;\n1     94.5"
+  },
+  {
+    "objectID": "presentation.html#x-model",
+    "href": "presentation.html#x-model",
+    "title": "Neural Networks",
+    "section": "X Model",
+    "text": "X Model\n\nCodeArchitecturePredictions\n\n\n\nlibrary(neuralnet)\nmodel2 &lt;- neuralnet(\n  label~x+y, \n  data=train2, \n  hidden=c(5,5), \n  linear.output=FALSE)\n\n\n\n   prediction_label\n      a   b\n  a  99   0\n  b   0 101\n\n\n# A tibble: 1 × 1\n  accuracy\n     &lt;dbl&gt;\n1      100"
+  },
+  {
+    "objectID": "presentation.html#xy-model",
+    "href": "presentation.html#xy-model",
+    "title": "Neural Networks",
+    "section": "XY Model",
+    "text": "XY Model\n\nCodeArchitecturePredictions\n\n\n\nlibrary(neuralnet)\nmodel3 &lt;- neuralnet(\n  label~x+y, \n  data=train3, \n  hidden=c(5,5), \n  linear.output=FALSE)\n\n\n\n   prediction_label\n      a   b\n  a 104   1\n  b   3  92\n\n\n# A tibble: 1 × 1\n  accuracy\n     &lt;dbl&gt;\n1       98"
   }
 ]
