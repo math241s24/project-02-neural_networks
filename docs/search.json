@@ -11,7 +11,7 @@
     "href": "presentation.html#the-data",
     "title": "Neural Networks",
     "section": "The Data",
-    "text": "The Data\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.\n\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nTwo coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be"
+    "text": "The Data\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.\n\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nTwo continuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be"
   },
   {
     "objectID": "presentation.html#the-data-continued",
@@ -60,7 +60,7 @@
     "href": "presentation.html#gauss-model",
     "title": "Neural Networks",
     "section": "Gauss Model",
-    "text": "Gauss Model\n\nArchitecturePredictions"
+    "text": "Gauss Model\n\nCodeArchitecturePredictions\n\n\n\nlibrary(neuralnet)\nmodel1 &lt;- neuralnet(\n  label~x+y, \n  data=train1, \n  hidden=c(5,5), \n  linear.output=FALSE)\n\n\n\n   prediction_label\n      a   b\n  a 113   0\n  b   0  87\n\n\n# A tibble: 1 × 1\n  accuracy\n     &lt;dbl&gt;\n1      100"
   },
   {
     "objectID": "presentation.html#spiral-model",
@@ -102,7 +102,7 @@
     "href": "presentation.html#what-is-machine-learningdeep-learning",
     "title": "Neural Networks",
     "section": "What is Machine learning/Deep learning",
-    "text": "What is Machine learning/Deep learning\nMachine learning is fundamentally about exploiting patterns in data.\nDeep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process. For this Project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict."
+    "text": "What is Machine learning/Deep learning\nMachine learning is fundamentally about exploiting patterns in data.\nDeep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process.\nFor this project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict."
   },
   {
     "objectID": "presentation.html#where-to-go-from-here",
