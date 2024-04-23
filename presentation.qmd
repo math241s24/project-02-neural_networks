@@ -4,7 +4,10 @@ subtitle: "Project 2"
 author: "Elliott Chang, Cameron Adams"
 title-slide-attributes:
   data-slide-number: none
-format: revealjs
+format:
+  revealjs:
+    transition: slide
+    incremental: true 
 editor: visual
 execute:
   echo: false
@@ -119,11 +122,15 @@ spiral_plot <- ggplot(spiral_data, aes(x=x, y=y, color=factor(label))) +
 
 We plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.
 
--   For the sake of this project, we decided to focus on classification
+-   We decided to focus on classification tasks, with applications in clustering and computer vision.
 
--   
+Research Question: 
 
-## The data:
+-   How accurately can a simple neural network classify points with their correct clusters?
+
+-   What are the benefits of using a neural network over other algorithms?
+
+## The Data
 
 To illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.
 
@@ -131,7 +138,7 @@ To illustrate the power and flexibility of neural networks, we created multiple 
 
 -   Two coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be
 
-## The Data (Continued)
+## The Data
 
 ```{r}
 library(cowplot)
@@ -142,9 +149,23 @@ plot_grid(gauss_plot, x_plot, xy_plot, spiral_plot)
 
 -   Despite the intuitive nature of the relationships, modeling them is quite difficult using tools that we've learned about so far in this class
 
+
+## What is a Neural Network? {.smaller}
+
+-   a machine learning algorithm modeled on the human brain and nervous system (hence NEURAL network)
+
+-   contains a network of nodes, organized into layers, each of which can be thought of as its own linear regression model
+    -   analogously, the 'weights' associated to a node can be viewed as slope coefficients and 'biases' can be viewed as the intercept terms
+    -   weights and biases are assigned randomly, then iteratively changed to reduce training error
+
+-   each additional node allows for a different linear relationships... adding more 'layers' of nodes allows for more flexible, non-linear relationships
+
+-   similar to decision trees, one can think of neural networks as 'partitioning' the predictor space
+
 ## What is a Neural Network?
 
-![Image](data/neuralnetwork.png)
+![](data/neuralnetwork.png)
+
 
 ## Training Neural Networks
 
@@ -175,10 +196,30 @@ Testing a neural network in the context of classification tasks involves
     -   Specificity?
 
     -   Sensitivity?
+    
+    
+```{r}
+generate_grid <- function(data) {
+  x_range <- seq(min(data$x)-1, max(data$x)+1, length.out=200)
+  y_range <- seq(min(data$y)-1, max(data$y)+1, length.out=200)
+  grid <- expand.grid(x=x_range, y=y_range)
+  return(grid)
+}
 
-## Using our data...
+grid1 <- generate_grid(data_two)
+grid2 <- generate_grid(data_by_x)
+grid3 <- generate_grid(data_by_xy)
+grid4 <- generate_grid(spiral_data)
 
-Want to add code chunks with tabs
+predict_grid <- function(model, grid) {
+  grid$pred <- predict(model, grid)
+  grid$pred_label <- ifelse(grid$pred[,1] > grid$pred[,2], 'a', 'b')
+  return(grid)
+}
+```
+
+
+## Gauss Model
 
 ```{r}
 #| echo: false
@@ -203,25 +244,234 @@ test3 <- split_data3$test
 split_data4 <- train_test_split(spiral_data)
 train4 <- split_data4$train
 test4 <- split_data4$test
+
+plot_prediction <- function(grid, data, title) {
+  ggplot() +
+    geom_tile(data=grid, aes(x=x, y=y, fill=pred_label), alpha=0.5) +
+    geom_point(data=data, aes(x=x, y=y, color=label), alpha=0.8) +
+    scale_fill_manual(values=c('a'='blue', 'b'='red')) +
+    scale_color_manual(values=c('a'='blue', 'b'='red')) +
+    labs(title=title, fill="Predicted Label", color="Actual Label") +
+    theme_minimal()
+}
 ```
 
 ::: panel-tabset
+<<<<<<< HEAD
 ## bye
 
+=======
+## Code
+>>>>>>> 8aa147f4a71c93d901697e2824f639a4e31164b5
 ```{r}
-#| label: confusion-matrix
+#| label: model1
 #| warning: false
 #| message: false
+#| include: true
+#| echo: true
+
+library(neuralnet)
+model1 <- neuralnet(
+  label~x+y, 
+  data=train1, 
+  hidden=c(5,5), 
+  linear.output=FALSE)
+```
+
+```{r}
+#| echo: false
+
+pred <- predict(model1, test1)
+labels <- c("a", "b")
+prediction_label <- data.frame(max.col(pred)) %>%
+  mutate(pred=labels[max.col(pred)]) %>%
+  select(2) %>%
+  unlist()
+table(test1$label, prediction_label)
+
+check <- ifelse(test1$label == 'a', 1, 2) == max.col(pred)
+accuracy <- (sum(check)/nrow(test1))*100
+data_frame(accuracy = accuracy)
+```
+
+
+## Architecture
+
+```{r}
+#| label: arc1
+#| echo: false
+
+plot(model1, rep="best")
+```
+
+
+## Predictions
+
+```{r}
+#| echo: false
+
+
+grid1$pred_label <- predict_grid(model1, grid1)$pred_label
+```
+
+```{r}
+#| label: plot1
+#| echo: false
+
+plot_prediction(grid1, data_two, "Model 1 Predictions")
+```
+:::
+
+## X Model
+
+::: panel-tabset
+## Code
+```{r}
+#| label: model2
+#| warning: false
+#| message: false
+#| include: true
+#| echo: true
+
+library(neuralnet)
+model2 <- neuralnet(
+  label~x+y, 
+  data=train2, 
+  hidden=c(5,5), 
+  linear.output=FALSE)
+```
+
+```{r}
+#| echo: false
+
+pred <- predict(model2, test2)
+labels <- c("a", "b")
+prediction_label <- data.frame(max.col(pred)) %>%
+  mutate(pred=labels[max.col(pred)]) %>%
+  select(2) %>%
+  unlist()
+table(test2$label, prediction_label)
+
+check <- ifelse(test2$label == 'a', 1, 2) == max.col(pred)
+accuracy <- (sum(check)/nrow(test2))*100
+data_frame(accuracy = accuracy)
+```
+
+
+## Architecture
+
+```{r}
+#| label: arc2
+#| echo: false
+
+plot(model2, rep="best")
+```
+
+
+## Predictions
+
+```{r}
+#| echo: false
+
+
+grid2$pred_label <- predict_grid(model2, grid2)$pred_label
+```
+
+```{r}
+#| label: plot2
+#| echo: false
+
+plot_prediction(grid2, data_by_x, "Model 2 Predictions")
+```
+:::
+
+## XY Model
+
+::: panel-tabset
+## Code
+```{r}
+#| label: model3
+#| warning: false
+#| message: false
+#| include: true
+#| echo: true
+
+library(neuralnet)
+model3 <- neuralnet(
+  label~x+y, 
+  data=train3, 
+  hidden=c(5,5), 
+  linear.output=FALSE)
+```
+
+```{r}
+#| echo: false
+
+pred <- predict(model3, test3)
+labels <- c("a", "b")
+prediction_label <- data.frame(max.col(pred)) %>%
+  mutate(pred=labels[max.col(pred)]) %>%
+  select(2) %>%
+  unlist()
+table(test3$label, prediction_label)
+
+check <- ifelse(test3$label == 'a', 1, 2) == max.col(pred)
+accuracy <- (sum(check)/nrow(test3))*100
+data_frame(accuracy = accuracy)
+```
+
+
+## Architecture
+
+```{r}
+#| label: arc3
+#| echo: false
+
+plot(model3, rep="best")
+```
+
+
+## Predictions
+
+```{r}
+#| echo: false
+
+
+grid3$pred_label <- predict_grid(model3, grid3)$pred_label
+```
+
+```{r}
+#| label: plot3
+#| echo: false
+
+plot_prediction(grid3, data_by_xy, "Model 3 Predictions")
+```
+:::
+
+## Spiral Model
+::: panel-tabset
+
+## Code
+```{r}
+#| label: model4
+#| warning: false
+#| message: false
+#| include: true
+#| echo: true
 
 library(neuralnet)
 model4 <- neuralnet(
     label~x + y,
-    data=train4,
-    hidden=c(8,8),
+    data=train4, 
+    hidden=c(8,8), #two hidden layers with 8 nodes each
     linear.output=FALSE,
     learningrate=0.001,
     stepmax=1e+06
 )
+```
+
+```{r}
+#| echo: false
 
 pred <- predict(model4, test4)
 labels <- c("a", "b")
@@ -230,14 +480,31 @@ prediction_label <- data.frame(max.col(pred)) %>%
   select(2) %>%
   unlist()
 table(test4$label, prediction_label)
+
+check <- ifelse(test4$label == 'a', 1, 2) == max.col(pred)
+accuracy <- (sum(check)/nrow(test4))*100
+data_frame(accuracy = accuracy)
 ```
 
+<<<<<<< HEAD
 ## hi
+=======
+
+## Predictions
+>>>>>>> 8aa147f4a71c93d901697e2824f639a4e31164b5
 
 ```{r}
-#| label: defnw
 #| echo: false
-table(test4$label, prediction_label)
+
+
+grid4$pred_label <- predict_grid(model4, grid4)$pred_label
+```
+
+```{r}
+#| label: plot
+#| echo: false
+
+plot_prediction(grid4, spiral_data, "Model 4 Predictions")
 ```
 :::
 
