@@ -347,7 +347,7 @@ ui <- fluidPage(
                                                                       "0.001", 
                                                                       "0.0003",
                                                                       "0.0001")),
-      selectInput("HiddenLayers", "Choose Number of hidden layers:", choices = c("default",
+      selectInput("HiddenLayers", "Choose Number of nodes in 2 layers:", choices = c("default",
                                                                                  "3", 
                                                                                  "4", 
                                                                                  "5",
@@ -381,7 +381,7 @@ server <- function(input, output) {
     } else {
       
       # Convert numeric if not 'default'
-      hidden_layers <- ifelse(input$HiddenLayers != "default", rep(as.numeric(input$HiddenLayers), 2), c(5,5))
+      hidden_layers <- ifelse(input$HiddenLayers != "default", rep(as.numeric(input$HiddenLayers), as.numeric(input$HiddenLayers)), c(5,5))
       learning_rate <- ifelse(input$learningRate != "default", as.numeric(input$learningRate), 0.01)
 
       

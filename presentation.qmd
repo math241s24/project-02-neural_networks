@@ -118,6 +118,14 @@ spiral_plot <- ggplot(spiral_data, aes(x=x, y=y, color=factor(label))) +
   theme_minimal()
 ```
 
+
+## What is Machine learning/Deep learning
+
+Machine learning is fundamentally about exploiting patterns in data.
+
+Deep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process. For this project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict.
+
+
 ## Introduction
 
 We plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.
@@ -486,12 +494,10 @@ accuracy <- (sum(check)/nrow(test4))*100
 data_frame(accuracy = accuracy)
 ```
 
-<<<<<<< HEAD
-## hi
-=======
+
 
 ## Predictions
->>>>>>> 8aa147f4a71c93d901697e2824f639a4e31164b5
+
 
 ```{r}
 #| echo: false
@@ -512,4 +518,25 @@ plot_prediction(grid4, spiral_data, "Model 4 Predictions")
 
 -   Neural Networks are extremely powerful, especially in the context of classification
 
--   Neural Networks are significantly more flexible than other algorithms
+-   Neural Networks are significantly more flexible but also limiting than other algorithms:
+    - Compared to traditional models such as decision trees and linear regression, neural networks provided enhanced accuracy and flexibility, handling non-linear data relationships more effectively
+
+-  The 'black box' nature of deep learning models can impede interpretability and trustworthiness
+
+## Where to go from here?
+
+- Neural Networks are great for image classification (CNN's) and object detection. 
+
+- Self driving with reinforcmenet learning
+
+- Neural networks are pivotal in natureal langauge processing for tasks like translation, sentiment analysis, and chatbots
+
+- Generate AI's that can play and excel at complex games, such as Chess and Go (AlphaGo 2016)
+
+- Cybersecurity and fraud detection (pattern recognition)
+
+
+
+
+
+

@@ -402,6 +402,11 @@ Elliott Chang, Cameron Adams
 </div>
 
 </section>
+<section id="what-is-machine-learningdeep-learning" class="slide level2">
+<h2>What is Machine learning/Deep learning</h2>
+<p>Machine learning is fundamentally about exploiting patterns in data.</p>
+<p>Deep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process. For this Project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict.</p>
+</section>
 <section id="introduction" class="slide level2">
 <h2>Introduction</h2>
 <p>We plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.</p>
@@ -476,40 +481,16 @@ Elliott Chang, Cameron Adams
 <section id="gauss-model" class="slide level2">
 <h2>Gauss Model</h2>
 <div class="panel-tabset">
-<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Code</a></li><li><a href="#tabset-1-2">Architecture</a></li><li><a href="#tabset-1-3">Predictions</a></li></ul>
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Architecture</a></li><li><a href="#tabset-1-2">Predictions</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(neuralnet)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>model1 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(</span>
-<span id="cb1-3"><a href="#cb1-3"></a>  label<span class="sc">~</span>x<span class="sc">+</span>y, </span>
-<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">data=</span>train1, </span>
-<span id="cb1-5"><a href="#cb1-5"></a>  <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), </span>
-<span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">linear.output=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>   prediction_label
-      a   b
-  a 113   0
-  b   0  87</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 1
-  accuracy
-     &lt;dbl&gt;
-1      100</code></pre>
-</div>
-</div>
-</div>
-<div id="tabset-1-2">
 <div class="cell">
 <div class="cell-output-display">
 <p><img data-src="presentation_files/figure-revealjs/arc1-1.png" style="width:70.0%"></p>
 </div>
 </div>
 </div>
-<div id="tabset-1-3">
+<div id="tabset-1-2">
 <div class="cell">
 <div class="cell-output-display">
 <p><img data-src="presentation_files/figure-revealjs/plot1-1.png" style="width:70.0%"></p>
@@ -526,12 +507,12 @@ Elliott Chang, Cameron Adams
 <div class="tab-content">
 <div id="tabset-2-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">library</span>(neuralnet)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>model2 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(</span>
-<span id="cb4-3"><a href="#cb4-3"></a>  label<span class="sc">~</span>x<span class="sc">+</span>y, </span>
-<span id="cb4-4"><a href="#cb4-4"></a>  <span class="at">data=</span>train2, </span>
-<span id="cb4-5"><a href="#cb4-5"></a>  <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), </span>
-<span id="cb4-6"><a href="#cb4-6"></a>  <span class="at">linear.output=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(neuralnet)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>model2 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(</span>
+<span id="cb1-3"><a href="#cb1-3"></a>  label<span class="sc">~</span>x<span class="sc">+</span>y, </span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">data=</span>train2, </span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), </span>
+<span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">linear.output=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -572,12 +553,12 @@ Elliott Chang, Cameron Adams
 <div class="tab-content">
 <div id="tabset-3-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">library</span>(neuralnet)</span>
-<span id="cb7-2"><a href="#cb7-2"></a>model3 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(</span>
-<span id="cb7-3"><a href="#cb7-3"></a>  label<span class="sc">~</span>x<span class="sc">+</span>y, </span>
-<span id="cb7-4"><a href="#cb7-4"></a>  <span class="at">data=</span>train3, </span>
-<span id="cb7-5"><a href="#cb7-5"></a>  <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), </span>
-<span id="cb7-6"><a href="#cb7-6"></a>  <span class="at">linear.output=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">library</span>(neuralnet)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>model3 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(</span>
+<span id="cb4-3"><a href="#cb4-3"></a>  label<span class="sc">~</span>x<span class="sc">+</span>y, </span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="at">data=</span>train3, </span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), </span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="at">linear.output=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -618,15 +599,15 @@ Elliott Chang, Cameron Adams
 <div class="tab-content">
 <div id="tabset-4-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">library</span>(neuralnet)</span>
-<span id="cb10-2"><a href="#cb10-2"></a>model4 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(</span>
-<span id="cb10-3"><a href="#cb10-3"></a>    label<span class="sc">~</span>x <span class="sc">+</span> y,</span>
-<span id="cb10-4"><a href="#cb10-4"></a>    <span class="at">data=</span>train4, </span>
-<span id="cb10-5"><a href="#cb10-5"></a>    <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">8</span>), <span class="co">#two hidden layers with 8 nodes each</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a>    <span class="at">linear.output=</span><span class="cn">FALSE</span>,</span>
-<span id="cb10-7"><a href="#cb10-7"></a>    <span class="at">learningrate=</span><span class="fl">0.001</span>,</span>
-<span id="cb10-8"><a href="#cb10-8"></a>    <span class="at">stepmax=</span><span class="fl">1e+06</span></span>
-<span id="cb10-9"><a href="#cb10-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">library</span>(neuralnet)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>model4 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    label<span class="sc">~</span>x <span class="sc">+</span> y,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="at">data=</span>train4, </span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">8</span>), <span class="co">#two hidden layers with 8 nodes each</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>    <span class="at">linear.output=</span><span class="cn">FALSE</span>,</span>
+<span id="cb7-7"><a href="#cb7-7"></a>    <span class="at">learningrate=</span><span class="fl">0.001</span>,</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="at">stepmax=</span><span class="fl">1e+06</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -657,7 +638,21 @@ Elliott Chang, Cameron Adams
 <h2>Conclusion</h2>
 <ul>
 <li class="fragment"><p>Neural Networks are extremely powerful, especially in the context of classification</p></li>
-<li class="fragment"><p>Neural Networks are significantly more flexible than other algorithms</p></li>
+<li class="fragment"><p>Neural Networks are significantly more flexible but also limiting than other algorithms:</p>
+<ul>
+<li class="fragment">Compared to traditional models such as decision trees and linear regression, neural networks provided enhanced accuracy and flexibility, handling non-linear data relationships more effectively</li>
+</ul></li>
+<li class="fragment"><p>The ‘black box’ nature of deep learning models can impede interpretability and trustworthiness</p></li>
+</ul>
+</section>
+<section id="where-to-go-from-here" class="slide level2">
+<h2>Where to go from here?</h2>
+<ul>
+<li class="fragment"><p>Neural Networks are great for image classification (CNN’s) and object detection.</p></li>
+<li class="fragment"><p>Self driving with reinforcmenet learning</p></li>
+<li class="fragment"><p>Neural networks are pivotal in natureal langauge processing for tasks like translation, sentiment analysis, and chatbots</p></li>
+<li class="fragment"><p>Generate AI’s that can play and excel at complex games, such as Chess and Go (AlphaGo 2016)</p></li>
+<li class="fragment"><p>Cybersecurity and fraud detection (pattern recognition)</p></li>
 </ul>
 
 <div class="footer footer-default">

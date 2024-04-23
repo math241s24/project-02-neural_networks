@@ -53,14 +53,14 @@
     "href": "presentation.html#conclusion",
     "title": "Neural Networks",
     "section": "Conclusion",
-    "text": "Conclusion\n\nNeural Networks are extremely powerful, especially in the context of classification\nNeural Networks are significantly more flexible than other algorithms"
+    "text": "Conclusion\n\nNeural Networks are extremely powerful, especially in the context of classification\nNeural Networks are significantly more flexible but also limiting than other algorithms:\n\nCompared to traditional models such as decision trees and linear regression, neural networks provided enhanced accuracy and flexibility, handling non-linear data relationships more effectively\n\nThe ‘black box’ nature of deep learning models can impede interpretability and trustworthiness"
   },
   {
     "objectID": "presentation.html#gauss-model",
     "href": "presentation.html#gauss-model",
     "title": "Neural Networks",
     "section": "Gauss Model",
-    "text": "Gauss Model\n\nCodeArchitecturePredictions\n\n\n\nlibrary(neuralnet)\nmodel1 &lt;- neuralnet(\n  label~x+y, \n  data=train1, \n  hidden=c(5,5), \n  linear.output=FALSE)\n\n\n\n   prediction_label\n      a   b\n  a 113   0\n  b   0  87\n\n\n# A tibble: 1 × 1\n  accuracy\n     &lt;dbl&gt;\n1      100"
+    "text": "Gauss Model\n\nArchitecturePredictions"
   },
   {
     "objectID": "presentation.html#spiral-model",
@@ -96,5 +96,19 @@
     "title": "Neural Networks",
     "section": "What is a Neural Network?",
     "text": "What is a Neural Network?"
+  },
+  {
+    "objectID": "presentation.html#what-is-machine-learningdeep-learning",
+    "href": "presentation.html#what-is-machine-learningdeep-learning",
+    "title": "Neural Networks",
+    "section": "What is Machine learning/Deep learning",
+    "text": "What is Machine learning/Deep learning\nMachine learning is fundamentally about exploiting patterns in data.\nDeep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process. For this Project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict."
+  },
+  {
+    "objectID": "presentation.html#where-to-go-from-here",
+    "href": "presentation.html#where-to-go-from-here",
+    "title": "Neural Networks",
+    "section": "Where to go from here?",
+    "text": "Where to go from here?\n\nNeural Networks are great for image classification (CNN’s) and object detection.\nSelf driving with reinforcmenet learning\nNeural networks are pivotal in natureal langauge processing for tasks like translation, sentiment analysis, and chatbots\nGenerate AI’s that can play and excel at complex games, such as Chess and Go (AlphaGo 2016)\nCybersecurity and fraud detection (pattern recognition)"
   }
 ]
