@@ -406,40 +406,57 @@ Elliott Chang, Cameron Adams
 <h2>Introduction</h2>
 <p>We plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.</p>
 <ul>
-<li><p>For the sake of this project, we decided to focus on classification</p></li>
-<li></li>
+<li class="fragment">We decided to focus on classification tasks, with applications in clustering and computer vision.</li>
+</ul>
+<p>Research Question:</p>
+<ul>
+<li class="fragment"><p>How accurately can a simple neural network classify points with their correct clusters?</p></li>
+<li class="fragment"><p>What are the benefits of using a neural network over other algorithms?</p></li>
 </ul>
 </section>
 <section id="the-data" class="slide level2">
-<h2>The data:</h2>
+<h2>The Data</h2>
 <p>To illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.</p>
 <ul>
-<li><p>Each dataset contains two continuous predictor variables <code>x</code> and <code>y</code>, and one categorical response variable <code>label</code> with factors <code>a</code> and <code>b</code>.</p></li>
-<li><p>Two coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be</p></li>
+<li class="fragment"><p>Each dataset contains two continuous predictor variables <code>x</code> and <code>y</code>, and one categorical response variable <code>label</code> with factors <code>a</code> and <code>b</code>.</p></li>
+<li class="fragment"><p>Two coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be</p></li>
 </ul>
 </section>
-<section id="the-data-continued" class="slide level2">
-<h2>The Data (Continued)</h2>
+<section id="the-data-1" class="slide level2">
+<h2>The Data</h2>
 
 <img data-src="presentation_files/figure-revealjs/unnamed-chunk-4-1.png" style="width:70.0%" class="r-stretch"><ul>
-<li>Despite the intuitive nature of the relationships, modeling them is quite difficult using tools that we’ve learned about so far in this class</li>
+<li class="fragment">Despite the intuitive nature of the relationships, modeling them is quite difficult using tools that we’ve learned about so far in this class</li>
 </ul>
 </section>
-<section id="what-is-a-neural-network" class="slide level2">
+<section id="what-is-a-neural-network" class="slide level2 smaller">
+<h2>What is a Neural Network?</h2>
+<ul>
+<li class="fragment"><p>a machine learning algorithm modeled on the human brain and nervous system (hence NEURAL network)</p></li>
+<li class="fragment"><p>contains a network of nodes, organized into layers, each of which can be thought of as its own linear regression model</p>
+<ul>
+<li class="fragment">analogously, the ‘weights’ associated to a node can be viewed as slope coefficients and ‘biases’ can be viewed as the intercept terms</li>
+<li class="fragment">weights and biases are assigned randomly, then iteratively changed to reduce training error</li>
+</ul></li>
+<li class="fragment"><p>each additional node allows for a different linear relationships… adding more ‘layers’ of nodes allows for more flexible, non-linear relationships</p></li>
+<li class="fragment"><p>similar to decision trees, one can think of neural networks as ‘partitioning’ the predictor space</p></li>
+</ul>
+</section>
+<section id="what-is-a-neural-network-1" class="slide level2">
 <h2>What is a Neural Network?</h2>
 
-<img data-src="data/neuralnetwork.png" class="r-stretch quarto-figure-center"><p class="caption">Image</p></section>
+<img data-src="data/neuralnetwork.png" class="r-stretch"></section>
 <section id="training-neural-networks" class="slide level2">
 <h2>Training Neural Networks</h2>
 <p>Training neural network involves</p>
 <ul>
-<li><p>Training/testing split</p></li>
-<li><p>Specifying the architecture of your neural network</p>
+<li class="fragment"><p>Training/testing split</p></li>
+<li class="fragment"><p>Specifying the architecture of your neural network</p>
 <ul>
-<li><p>How many layers?</p></li>
-<li><p>How many nodes?</p></li>
-<li><p>Training rate?</p></li>
-<li><p>Epochs?</p></li>
+<li class="fragment"><p>How many layers?</p></li>
+<li class="fragment"><p>How many nodes?</p></li>
+<li class="fragment"><p>Training rate?</p></li>
+<li class="fragment"><p>Epochs?</p></li>
 </ul></li>
 </ul>
 </section>
@@ -447,12 +464,12 @@ Elliott Chang, Cameron Adams
 <h2>Testing Neural Networks</h2>
 <p>Testing a neural network in the context of classification tasks involves</p>
 <ul>
-<li><p>Use the model to make predictions on the test data</p></li>
-<li><p>Compare the predictions to the true values</p>
+<li class="fragment"><p>Use the model to make predictions on the test data</p></li>
+<li class="fragment"><p>Compare the predictions to the true values</p>
 <ul>
-<li><p>Overall accuracy?</p></li>
-<li><p>Specificity?</p></li>
-<li><p>Sensitivity?</p></li>
+<li class="fragment"><p>Overall accuracy?</p></li>
+<li class="fragment"><p>Specificity?</p></li>
+<li class="fragment"><p>Sensitivity?</p></li>
 </ul></li>
 </ul>
 </section>
@@ -639,8 +656,8 @@ Elliott Chang, Cameron Adams
 <section id="conclusion" class="slide level2">
 <h2>Conclusion</h2>
 <ul>
-<li><p>Neural Networks are extremely powerful, especially in the context of classification</p></li>
-<li><p>Neural Networks are significantly more flexible than other algorithms</p></li>
+<li class="fragment"><p>Neural Networks are extremely powerful, especially in the context of classification</p></li>
+<li class="fragment"><p>Neural Networks are significantly more flexible than other algorithms</p></li>
 </ul>
 
 <div class="footer footer-default">
@@ -804,7 +821,7 @@ Elliott Chang, Cameron Adams
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'none',
+        transition: 'slide',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',

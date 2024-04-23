@@ -4,14 +4,14 @@
     "href": "presentation.html#introduction",
     "title": "Neural Networks",
     "section": "Introduction",
-    "text": "Introduction\nWe plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.\n\nFor the sake of this project, we decided to focus on classification"
+    "text": "Introduction\nWe plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.\n\nWe decided to focus on classification tasks, with applications in clustering and computer vision.\n\nResearch Question:\n\nHow accurately can a simple neural network classify points with their correct clusters?\nWhat are the benefits of using a neural network over other algorithms?"
   },
   {
     "objectID": "presentation.html#the-data",
     "href": "presentation.html#the-data",
     "title": "Neural Networks",
-    "section": "The data:",
-    "text": "The data:\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.\n\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nTwo coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be"
+    "section": "The Data",
+    "text": "The Data\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.\n\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nTwo coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be"
   },
   {
     "objectID": "presentation.html#the-data-continued",
@@ -25,7 +25,7 @@
     "href": "presentation.html#what-is-a-neural-network",
     "title": "Neural Networks",
     "section": "What is a Neural Network?",
-    "text": "What is a Neural Network?\n\nImage"
+    "text": "What is a Neural Network?\n\na machine learning algorithm modeled on the human brain and nervous system (hence NEURAL network)\ncontains a network of nodes, organized into layers, each of which can be thought of as its own linear regression model\n\nanalogously, the ‘weights’ associated to a node can be viewed as slope coefficients and ‘biases’ can be viewed as the intercept terms\nweights and biases are assigned randomly, then iteratively changed to reduce training error\n\neach additional node allows for a different linear relationships… adding more ‘layers’ of nodes allows for more flexible, non-linear relationships\nsimilar to decision trees, one can think of neural networks as ‘partitioning’ the predictor space"
   },
   {
     "objectID": "presentation.html#training-neural-networks",
@@ -82,5 +82,19 @@
     "title": "Neural Networks",
     "section": "XY Model",
     "text": "XY Model\n\nCodeArchitecturePredictions\n\n\n\nlibrary(neuralnet)\nmodel3 &lt;- neuralnet(\n  label~x+y, \n  data=train3, \n  hidden=c(5,5), \n  linear.output=FALSE)\n\n\n\n   prediction_label\n      a   b\n  a 104   1\n  b   3  92\n\n\n# A tibble: 1 × 1\n  accuracy\n     &lt;dbl&gt;\n1       98"
+  },
+  {
+    "objectID": "presentation.html#the-data-1",
+    "href": "presentation.html#the-data-1",
+    "title": "Neural Networks",
+    "section": "The Data",
+    "text": "The Data\n\n\nDespite the intuitive nature of the relationships, modeling them is quite difficult using tools that we’ve learned about so far in this class"
+  },
+  {
+    "objectID": "presentation.html#what-is-a-neural-network-1",
+    "href": "presentation.html#what-is-a-neural-network-1",
+    "title": "Neural Networks",
+    "section": "What is a Neural Network?",
+    "text": "What is a Neural Network?"
   }
 ]

@@ -4,7 +4,10 @@ subtitle: "Project 2"
 author: "Elliott Chang, Cameron Adams"
 title-slide-attributes:
   data-slide-number: none
-format: revealjs
+format:
+  revealjs:
+    transition: slide
+    incremental: true 
 editor: visual
 execute:
   echo: false
@@ -119,11 +122,15 @@ spiral_plot <- ggplot(spiral_data, aes(x=x, y=y, color=factor(label))) +
 
 We plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.
 
--   For the sake of this project, we decided to focus on classification
+-   We decided to focus on classification tasks, with applications in clustering and computer vision.
 
--   
+Research Question: 
 
-## The data:
+-   How accurately can a simple neural network classify points with their correct clusters?
+
+-   What are the benefits of using a neural network over other algorithms?
+
+## The Data
 
 To illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.
 
@@ -131,7 +138,7 @@ To illustrate the power and flexibility of neural networks, we created multiple 
 
 -   Two coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be
 
-## The Data (Continued)
+## The Data
 
 ```{r}
 library(cowplot)
@@ -142,9 +149,23 @@ plot_grid(gauss_plot, x_plot, xy_plot, spiral_plot)
 
 -   Despite the intuitive nature of the relationships, modeling them is quite difficult using tools that we've learned about so far in this class
 
+
+## What is a Neural Network? {.smaller}
+
+-   a machine learning algorithm modeled on the human brain and nervous system (hence NEURAL network)
+
+-   contains a network of nodes, organized into layers, each of which can be thought of as its own linear regression model
+    -   analogously, the 'weights' associated to a node can be viewed as slope coefficients and 'biases' can be viewed as the intercept terms
+    -   weights and biases are assigned randomly, then iteratively changed to reduce training error
+
+-   each additional node allows for a different linear relationships... adding more 'layers' of nodes allows for more flexible, non-linear relationships
+
+-   similar to decision trees, one can think of neural networks as 'partitioning' the predictor space
+
 ## What is a Neural Network?
 
-![Image](data/neuralnetwork.png)
+![](data/neuralnetwork.png)
+
 
 ## Training Neural Networks
 
