@@ -44,7 +44,7 @@ We plan on illustrating the predictive power and flexibility of Neural Networks 
 
 -   
 
-## The data: 
+## The data:
 
 To illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.
 
