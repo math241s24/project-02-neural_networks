@@ -1,0 +1,58 @@
+[
+  {
+    "objectID": "presentation.html#introduction",
+    "href": "presentation.html#introduction",
+    "title": "Neural Networks",
+    "section": "Introduction",
+    "text": "Introduction\nWe plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.\n\nFor the sake of this project, we decided to focus on classification"
+  },
+  {
+    "objectID": "presentation.html#the-data",
+    "href": "presentation.html#the-data",
+    "title": "Neural Networks",
+    "section": "The data:",
+    "text": "The data:\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with complex relationships.\n\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nTwo coninuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationship might be"
+  },
+  {
+    "objectID": "presentation.html#the-data-continued",
+    "href": "presentation.html#the-data-continued",
+    "title": "Neural Networks",
+    "section": "The Data (Continued)",
+    "text": "The Data (Continued)\n\n\nDespite the intuitive nature of the relationships, modeling them is quite difficult using tools that we’ve learned about so far in this class"
+  },
+  {
+    "objectID": "presentation.html#what-is-a-neural-network",
+    "href": "presentation.html#what-is-a-neural-network",
+    "title": "Neural Networks",
+    "section": "What is a Neural Network?",
+    "text": "What is a Neural Network?\n\nImage"
+  },
+  {
+    "objectID": "presentation.html#training-neural-networks",
+    "href": "presentation.html#training-neural-networks",
+    "title": "Neural Networks",
+    "section": "Training Neural Networks",
+    "text": "Training Neural Networks\nTraining neural network involves\n\nTraining/testing split\nSpecifying the architecture of your neural network\n\nHow many layers?\nHow many nodes?\nTraining rate?\nEpochs?"
+  },
+  {
+    "objectID": "presentation.html#testing-neural-networks",
+    "href": "presentation.html#testing-neural-networks",
+    "title": "Neural Networks",
+    "section": "Testing Neural Networks",
+    "text": "Testing Neural Networks\nTesting a neural network in the context of classification tasks involves\n\nUse the model to make predictions on the test data\nCompare the predictions to the true values\n\nOverall accuracy?\nSpecificity?\nSensitivity?"
+  },
+  {
+    "objectID": "presentation.html#using-our-data",
+    "href": "presentation.html#using-our-data",
+    "title": "Neural Networks",
+    "section": "Using our data…",
+    "text": "Using our data…\nWant to add code chunks with tabs\n\nbyehi\n\n\n\n\n   prediction_label\n     a  b\n  a 94  3\n  b  6 97\n\n\n\n\n\n\n   prediction_label\n     a  b\n  a 94  3\n  b  6 97"
+  },
+  {
+    "objectID": "presentation.html#conclusion",
+    "href": "presentation.html#conclusion",
+    "title": "Neural Networks",
+    "section": "Conclusion",
+    "text": "Conclusion\n\nNeural Networks are extremely powerful, especially in the context of classification\nNeural Networks are significantly more flexible than other algorithms"
+  }
+]
