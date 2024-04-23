@@ -206,8 +206,8 @@ test4 <- split_data4$test
 ```
 
 ::: panel-tabset
-
 ## bye
+
 ```{r}
 #| label: confusion-matrix
 #| warning: false
@@ -233,13 +233,12 @@ table(test4$label, prediction_label)
 ```
 
 ## hi
+
 ```{r}
 #| label: defnw
 #| echo: false
 table(test4$label, prediction_label)
 ```
-
-
 :::
 
 ## Conclusion
