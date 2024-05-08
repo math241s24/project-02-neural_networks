@@ -1,7 +1,11 @@
 ---
-title: "Your project title"
+title: "Project 2 Proposal: Clasifying generated data using Neural Networks in R"
 format: html
 editor: visual
 ---
 
-This project was developed by XX. For [MATH/STAT241](https://aallorant.github.io/math241s24/) at Reed College. The team is comprised of the following team members.
+This project was developed by Elliott and Cameron. For [MATH/STAT241](https://aallorant.github.io/math241s24/) at Reed College. The team is comprised of the following team members, Elliott and Cameron.
+
+Our project aims to develop a neural network model capable of predicting and classifying our own generated data sets, utilizing the `neuralnet` and `keras` packages in R, in service of introducing the concept of neural networks to the class and exploring how neural networks can be trained in R, specifically in the context of computer vision and data set classification.
+
+Throughout our work we were able to showcase the predictive power of Neural networks, illustrating its strength in particularly complex but patterned data sets, while also explaining the downsides and future explorations of this powerful tool.
