@@ -30,7 +30,7 @@ How accurately can a simple neural network classify points with their correct cl
 
 What are the benefits of using a neural network over other algorithms?
 
-```{r load-packages, label="load-pkgs", message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(neuralnet)
 library(shiny)
@@ -361,12 +361,6 @@ p4
 ```
 
 ```{r}
-
-
-
-p2 <- plot_prediction(grid2, data_by_x, "Model 2 Predictions")
-p3 <- plot_prediction(grid3, data_by_xy, "Model 3 Predictions")
-p4 <- plot_prediction(grid4, spiral_data, "Model 4 Predictions")
 p4_no_layers <- plot_prediction(grid4_no_layers, spiral_data, "Model 4.no layers Predictions")
 p4_5node_layer <- plot_prediction(grid4_5node_layer, spiral_data, "Model 4. 5 layer Predictions")
 
@@ -376,7 +370,7 @@ p4_no_layers
 p4_5node_layer
 ```
 
-```{r}
+```{r, eval = FALSE}
 
 ui <- fluidPage(
   titlePanel("Neural Networks Visualization"),

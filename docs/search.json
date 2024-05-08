@@ -110,5 +110,103 @@
     "title": "Neural Networks",
     "section": "Where to go from here?",
     "text": "Where to go from here?\n\nNeural Networks are great for image classification (CNN’s) and object detection.\nSelf driving with reinforcmenet learning\nNeural networks are pivotal in natureal langauge processing for tasks like translation, sentiment analysis, and chatbots\nGenerate AI’s that can play and excel at complex games, such as Chess and Go (AlphaGo 2016)\nCybersecurity and fraud detection (pattern recognition)"
+  },
+  {
+    "objectID": "index.html#introduction",
+    "href": "index.html#introduction",
+    "title": "",
+    "section": "Introduction",
+    "text": "Introduction\nMachine learning is fundamentally about exploiting patterns in data.\nDeep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process.\nFor this project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict.\nWe plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.\nWe decided to focus on classification tasks, with applications in clustering and computer vision.\nResearch Question:\nHow accurately can a simple neural network classify points with their correct clusters?\nWhat are the benefits of using a neural network over other algorithms?"
+  },
+  {
+    "objectID": "index.html#data-generation",
+    "href": "index.html#data-generation",
+    "title": "",
+    "section": "Data Generation",
+    "text": "Data Generation\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with increasingly complex relationships, one that\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nTwo continuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets."
+  },
+  {
+    "objectID": "index.html#model-1-gaussian-distributed-data-model",
+    "href": "index.html#model-1-gaussian-distributed-data-model",
+    "title": "",
+    "section": "Model 1: Gaussian Distributed Data Model",
+    "text": "Model 1: Gaussian Distributed Data Model\n\n\n\n\n\nNULL\n\n\n\n\n   prediction_label\n      a   b\n  a 113   0\n  b   0  87\n\n\n\n\n[1] 100"
+  },
+  {
+    "objectID": "index.html#model-2-classes-split-by-y-axis",
+    "href": "index.html#model-2-classes-split-by-y-axis",
+    "title": "",
+    "section": "Model 2: Classes Split by Y-Axis",
+    "text": "Model 2: Classes Split by Y-Axis\n\n\n\n\n\n\n\n   prediction_label\n      a   b\n  a  99   0\n  b   0 101\n\n\n\n\n[1] 100"
+  },
+  {
+    "objectID": "index.html#model-3-classes-split-by-quadrants",
+    "href": "index.html#model-3-classes-split-by-quadrants",
+    "title": "",
+    "section": "Model 3: Classes Split by Quadrants",
+    "text": "Model 3: Classes Split by Quadrants\n\n\n\n\n\n\n\n   prediction_label\n      a   b\n  a 105   0\n  b   0  95\n\n\n\n\n[1] 100"
+  },
+  {
+    "objectID": "index.html#model-4-spiral-data",
+    "href": "index.html#model-4-spiral-data",
+    "title": "",
+    "section": "Model 4: Spiral Data",
+    "text": "Model 4: Spiral Data\n\n\n   prediction_label\n     a  b\n  a 56 41\n  b 43 60\n\n\n   prediction_label\n     a  b\n  a 73 24\n  b 28 75\n\n\n   prediction_label\n     a  b\n  a 94  3\n  b  5 98"
+  },
+  {
+    "objectID": "proposal.html",
+    "href": "proposal.html",
+    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "section": "",
+    "text": "library(tidyverse)\nlibrary(neuralnet)\nlibrary(ggplot2)\nlibrary(dplyr)"
+  },
+  {
+    "objectID": "proposal.html#goal",
+    "href": "proposal.html#goal",
+    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "section": "Goal",
+    "text": "Goal\nOur project aims to develop a neural network model capable of predicting and classifying images based the brightness of individual pixels, utilizing the neuralnet and keras packages in R, in service of introducing the concept of neural networks to the class and exploring how neural networks can be trained in R, specifically in the context of computer vision and image classification."
+  },
+  {
+    "objectID": "proposal.html#dataset",
+    "href": "proposal.html#dataset",
+    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "section": "Dataset",
+    "text": "Dataset\n\ngenGauss &lt;- function(cx, cy, num_samples, variance, label) {\n  x &lt;- rnorm(num_samples, mean = cx, sd = sqrt(variance))\n  y &lt;- rnorm(num_samples, mean = cy, sd = sqrt(variance))\n  data.frame(x = x, y = y, label = label)\n}\n\n#generates two clusters of data points\nclassifyTwoGaussData &lt;- function(num_samples, noise) {\n  variance_scale &lt;- function(noise) {\n    (1 - noise) * 0.5 + noise * 4\n  }\n  variance &lt;- variance_scale(noise)\n  \n  points1 &lt;- genGauss(2, 2, num_samples / 2, variance, 1)\n  points2 &lt;- genGauss(-2, -2, num_samples / 2, variance, -1)\n  \n  # Combine  datasets\n  points &lt;- rbind(points1, points2)\n  return(points)\n}\n\n\nset.seed(123) \ndata_two &lt;- classifyTwoGaussData(1000, 0.1)\n\n# show data\nggplot(data_two, aes(x = x, y = y, color = factor(label))) +\n  geom_point(alpha = 0.6) +\n  labs(title = \"Classify Two Gauss Data\", color = \"Label\") +\n  theme_minimal()\n\n\n\n\n\ngenerateDataByX &lt;- function(num_samples) {\n  x &lt;- runif(num_samples, min = -5, max = 5)\n  y &lt;- runif(num_samples, min = -5, max = 5) \n  label &lt;- ifelse(x &gt;= 0, 1, -1)              \n  \n  data &lt;- data.frame(x = x, y = y, label = label)\n  return(data)\n}\n\nset.seed(123) \ndata_by_x &lt;- generateDataByX(1000)\n\n#plot\nggplot(data_by_x, aes(x = x, y = y, color = factor(label))) +\n  geom_point(alpha = 0.6) +\n  labs(title = \"Data Classified by X Value\", color = \"Label\") +\n  theme_minimal()\n\n\n\n\n\ngenerateDataByXYProduct &lt;- function(num_samples) {\n  x &lt;- runif(num_samples, min = -5, max = 5) \n  y &lt;- runif(num_samples, min = -5, max = 5)\n  label &lt;- ifelse(x * y &gt;= 0, 1, -1)         \n  \n  data &lt;- data.frame(x = x, y = y, label = label)\n  return(data)\n}\n\nset.seed(123) \ndata_by_xy &lt;- generateDataByXYProduct(1000)\n\nggplot(data_by_xy, aes(x = x, y = y, color = factor(label))) +\n  geom_point(alpha = 0.6) +\n  labs(title = \"Data Classified by XY Product\", color = \"Label\") +\n  theme_minimal()\n\n\n\n\nThe dataset consists of pixel brightness for images of clothing of various types. Each observation represents an individual \\(28 \\times 28\\) grayscale image of an item of clothing, with a variable label indicating the type of clothing (0 - T-shirt/top; 1 - Trouser; 2 - Pullover; 3 - Dress, 4 - Coat; 5 - Sandal; 6 - Shirt; 7 - Sneaker; 8 - Bag; 9 - Ankle boot) and 784 other variables, each representing the brightness of a unique pixel in the image (ordered sequentially from left to right, top to bottom). The training dataset fashion_train contains 60,000 observations and the testing dataset contains 10,000 observations. We chose this data because it is easy to work with and ideal when learning about how neural networks are trained."
+  },
+  {
+    "objectID": "proposal.html#motivation",
+    "href": "proposal.html#motivation",
+    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "section": "Motivation",
+    "text": "Motivation\nNeural networks represent a cornerstone of modern machine learning, offering significant power in pattern recognition, classification, and prediction tasks. Despite their widespread application across various domains, their implementation and functionality remain a mystery to many. Even to our group, of which both of us have some experience in neural networks, the underlying machinery is fairly opaque. We aim to demystify neural networks, showcasing their capabilities and how they can be implemented using the neuralnet package in R. This project not only serves an educational purpose but also demonstrates practical application in image classification, a prevalent task in AI. The goal will be to make a website and blog post, with the website hopefully being interactive so that people can get a more intuitive understanding of how neural networks work.."
+  },
+  {
+    "objectID": "proposal.html#research-question",
+    "href": "proposal.html#research-question",
+    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "section": "Research Question",
+    "text": "Research Question\nOur research question is twofold: how accurately can a simple neural network classify images of clothing into their correct categories, based on the brightness of the pixels? and what is the underlying process that allows neural networks to be trained."
+  },
+  {
+    "objectID": "proposal.html#plan-of-attack",
+    "href": "proposal.html#plan-of-attack",
+    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "section": "Plan of Attack",
+    "text": "Plan of Attack\nAfter this week we have 3 weeks to complete our project and present it: so here are our goal outlines\n\nWeek 11: train our neural networks, attempting to tune the architecture of our model such that it is simple but produces high predictive test accuracy.\nWeek 12: write code for our website and link our code into the shiny app before peer review \nWeek 13: work with peer review to clean up our code for our presentation\nWeek 14/15: write up with blog post"
+  },
+  {
+    "objectID": "proposal.html#project-repository-organization",
+    "href": "proposal.html#project-repository-organization",
+    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "section": "Project Repository Organization",
+    "text": "Project Repository Organization\nThe project repository is organized as follows:\n\n/_freeze - Contains files relating to the website.\n/_site - Contains files relating to the website.\n/data - Contains the dataset of cartoon character images.\n/models - Stores the trained neural network models.\nabout.qmd - Project description to appear on website\nproposal.qmd - Project proposal\nindex.qmd - Project write-up\npresentation.qmd - Project presentation\n\nEach folder includes a README.md explaining the contents and structure."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Your project title",
+    "section": "",
+    "text": "This project was developed by XX. For MATH/STAT241 at Reed College. The team is comprised of the following team members."
   }
 ]
