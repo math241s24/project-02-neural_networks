@@ -14,21 +14,15 @@ execute:
 
 ## Introduction
 
-Machine learning is fundamentally about exploiting patterns in data.
+Machine learning is fundamentally about exploiting patterns in data. Deep learning is a branch of machine learning which opts for huge expressive power, but loses almost all interpretability in the process. For this project we will be exploring *neural networks*, deep learning models which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict.
 
-Deep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process.
-
-For this project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict.
-
-We plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.
-
-We decided to focus on classification tasks, with applications in clustering and computer vision.
+We plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships. We decided to focus on classification tasks, with applications in clustering and computer vision.
 
 Research Question:
 
-How accurately can a simple neural network classify points with their correct clusters?
+- How accurately can a simple neural network classify points with their correct clusters?
 
-What are the benefits of using a neural network over other algorithms?
+- What are the benefits of using a neural network over other algorithms?
 
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -36,15 +30,20 @@ library(neuralnet)
 library(shiny)
 library(ggplot2)
 library(dplyr)
+library(cowplot)
 ```
+
+## What is a Neural Network?
+
+A neural network machine learning algorithm modeled on the human brain and nervous system (hence NEURAL network). Neural networks contain a lattice of nodes, organized into layers, each of which can be thought of as its own linear regression model. Analogously, the 'weights' associated to a node can be viewed as slope coefficients and 'biases' can be viewed as the intercept terms. These weights and biases are assigned randomly at first, then iteratively changed to reduce the training error. Each additional node allows for a different linear relationships and adding more 'layers' of nodes allows for more flexible, non-linear relationships. Similar to decision trees, one can think of neural networks as 'partitioning' the predictor space into regions of certain classes (in the context of classification).
 
 ## Data Generation
 
-To illustrate the power and flexibility of neural networks, we created multiple datasets with increasingly complex relationships, one that 
+To illustrate the power and flexibility of neural networks, we created multiple datasets with increasingly complex relationships.
 
 Each dataset contains two continuous predictor variables `x` and `y`, and one categorical response variable `label` with factors a and b.
 
-Two continuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets. 
+The two continuous predictors allow us to visualize the relationship between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets. 
 
 ```{r load-data}
 genGauss <- function(cx, cy, num_samples, variance, label) {
@@ -64,11 +63,6 @@ classifyTwoGaussData <- function(num_samples, noise) {
 
 set.seed(123)
 data_two <- classifyTwoGaussData(1000, 0.1)
-ggplot(data_two, aes(x=x, y=y, color=factor(label))) +
-  geom_point(alpha=0.6) +
-  labs(title="Classify Two Gauss Data", color="Label") +
-  theme_minimal()
-
 ```
 
 ```{r}
@@ -82,11 +76,6 @@ generateDataByX <- function(num_samples) {
 
 set.seed(123)
 data_by_x <- generateDataByX(1000)
-ggplot(data_by_x, aes(x=x, y=y, color=factor(label))) +
-  geom_point(alpha=0.6) +
-  labs(title="Data Classified by X Value", color="Label") +
-  theme_minimal()
-
 ```
 
 ```{r}
@@ -100,11 +89,6 @@ generateDataByXYProduct <- function(num_samples) {
 
 set.seed(123)
 data_by_xy <- generateDataByXYProduct(1000)
-ggplot(data_by_xy, aes(x=x, y=y, color=factor(label))) +
-  geom_point(alpha=0.6) +
-  labs(title="Data Classified by XY Product", color="Label") +
-  theme_minimal()
-
 ```
 
 ```{r}
@@ -128,12 +112,25 @@ generateSpiralData <- function(num_samples, noise) {
 
 set.seed(123)
 spiral_data <- generateSpiralData(1000, 0.1)
-ggplot(spiral_data, aes(x=x, y=y, color=factor(label))) +
-  geom_point(alpha=0.6) +
-  labs(title="Spiral Data", subtitle="Scatter plot of spiral data labeled as 'a' and 'b'", color="Label") +
-  theme_minimal()
-
 ```
+
+```{r}
+plot_grid(ggplot(data_two, aes(x=x, y=y, color=factor(label))) +
+  geom_point(alpha=0.6) +
+  labs(title="Classify Two Gauss Data", color="Label") +
+  theme_minimal(), ggplot(data_by_x, aes(x=x, y=y, color=factor(label))) +
+  geom_point(alpha=0.6) +
+  labs(title="Data Classified by X Value", color="Label") +
+  theme_minimal(), ggplot(data_by_xy, aes(x=x, y=y, color=factor(label))) +
+  geom_point(alpha=0.6) +
+  labs(title="Data Classified by XY Product", color="Label") +
+  theme_minimal(), ggplot(spiral_data, aes(x=x, y=y, color=factor(label))) +
+  geom_point(alpha=0.6) +
+  labs(title="Spiral Data", color="Label") +
+  theme_minimal())
+```
+
+This is where neural networks become extremely useful. Due to their previously mentioned flexibility, different neural networks with the exact same structure can be trained on vastly different datasets and still produce high predictive accuracy.
 
 ```{r}
 train_test_split <- function(data) {
