@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Project 2 Proposal: Clasifying generated data using Neural Networks in R"
 subtitle: "Project 2"
 author: ""
 format: html
