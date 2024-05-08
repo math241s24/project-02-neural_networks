@@ -118,15 +118,13 @@ spiral_plot <- ggplot(spiral_data, aes(x=x, y=y, color=factor(label))) +
   theme_minimal()
 ```
 
-
 ## What is Machine learning/Deep learning
 
 Machine learning is fundamentally about exploiting patterns in data.
 
-Deep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process. 
+Deep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process.
 
 For this project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict.
-
 
 ## Introduction
 
@@ -134,7 +132,7 @@ We plan on illustrating the predictive power and flexibility of Neural Networks 
 
 -   We decided to focus on classification tasks, with applications in clustering and computer vision.
 
-Research Question: 
+Research Question:
 
 -   How accurately can a simple neural network classify points with their correct clusters?
 
@@ -159,12 +157,12 @@ plot_grid(gauss_plot, x_plot, xy_plot, spiral_plot)
 
 -   Despite the intuitive nature of the relationships, modeling them is quite difficult using tools that we've learned about so far in this class
 
-
 ## What is a Neural Network? {.smaller}
 
 -   a machine learning algorithm modeled on the human brain and nervous system (hence NEURAL network)
 
 -   contains a network of nodes, organized into layers, each of which can be thought of as its own linear regression model
+
     -   analogously, the 'weights' associated to a node can be viewed as slope coefficients and 'biases' can be viewed as the intercept terms
     -   weights and biases are assigned randomly, then iteratively changed to reduce training error
 
@@ -175,7 +173,6 @@ plot_grid(gauss_plot, x_plot, xy_plot, spiral_plot)
 ## What is a Neural Network?
 
 ![](data/neuralnetwork.png)
-
 
 ## Training Neural Networks
 
@@ -206,8 +203,7 @@ Testing a neural network in the context of classification tasks involves
     -   Specificity?
 
     -   Sensitivity?
-    
-    
+
 ```{r}
 generate_grid <- function(data) {
   x_range <- seq(min(data$x)-1, max(data$x)+1, length.out=200)
@@ -227,7 +223,6 @@ predict_grid <- function(model, grid) {
   return(grid)
 }
 ```
-
 
 ## Gauss Model
 
@@ -267,10 +262,8 @@ plot_prediction <- function(grid, data, title) {
 ```
 
 ::: panel-tabset
-
-
-
 ## Code
+
 ```{r}
 #| label: model1
 #| warning: false
@@ -302,7 +295,6 @@ accuracy <- (sum(check)/nrow(test1))*100
 data_frame(accuracy = accuracy)
 ```
 
-
 ## Architecture
 
 ```{r}
@@ -311,7 +303,6 @@ data_frame(accuracy = accuracy)
 
 plot(model1, rep="best")
 ```
-
 
 ## Predictions
 
@@ -334,6 +325,7 @@ plot_prediction(grid1, data_two, "Model 1 Predictions")
 
 ::: panel-tabset
 ## Code
+
 ```{r}
 #| label: model2
 #| warning: false
@@ -365,7 +357,6 @@ accuracy <- (sum(check)/nrow(test2))*100
 data_frame(accuracy = accuracy)
 ```
 
-
 ## Architecture
 
 ```{r}
@@ -374,7 +365,6 @@ data_frame(accuracy = accuracy)
 
 plot(model2, rep="best")
 ```
-
 
 ## Predictions
 
@@ -397,6 +387,7 @@ plot_prediction(grid2, data_by_x, "Model 2 Predictions")
 
 ::: panel-tabset
 ## Code
+
 ```{r}
 #| label: model3
 #| warning: false
@@ -428,7 +419,6 @@ accuracy <- (sum(check)/nrow(test3))*100
 data_frame(accuracy = accuracy)
 ```
 
-
 ## Architecture
 
 ```{r}
@@ -437,7 +427,6 @@ data_frame(accuracy = accuracy)
 
 plot(model3, rep="best")
 ```
-
 
 ## Predictions
 
@@ -457,9 +446,10 @@ plot_prediction(grid3, data_by_xy, "Model 3 Predictions")
 :::
 
 ## Spiral Model
-::: panel-tabset
 
+::: panel-tabset
 ## Code
+
 ```{r}
 #| label: model4
 #| warning: false
@@ -494,10 +484,7 @@ accuracy <- (sum(check)/nrow(test4))*100
 data_frame(accuracy = accuracy)
 ```
 
-
-
 ## Predictions
-
 
 ```{r}
 #| echo: false
@@ -519,24 +506,19 @@ plot_prediction(grid4, spiral_data, "Model 4 Predictions")
 -   Neural Networks are extremely powerful, especially in the context of classification
 
 -   Neural Networks are significantly more flexible but also limiting than other algorithms:
-    - Compared to traditional models such as decision trees and linear regression, neural networks provided enhanced accuracy and flexibility, handling non-linear data relationships more effectively
 
--  The 'black box' nature of deep learning models can impede interpretability and trustworthiness
+    -   Compared to traditional models such as decision trees and linear regression, neural networks provided enhanced accuracy and flexibility, handling non-linear data relationships more effectively
+
+-   The 'black box' nature of deep learning models can impede interpretability and trustworthiness
 
 ## Where to go from here?
 
-- Neural Networks are great for image classification (CNN's) and object detection. 
+-   Neural Networks are great for image classification (CNN's) and object detection.
 
-- Self driving with reinforcmenet learning
+-   Self driving with reinforcmenet learning
 
-- Neural networks are pivotal in natureal langauge processing for tasks like translation, sentiment analysis, and chatbots
+-   Neural networks are pivotal in natureal langauge processing for tasks like translation, sentiment analysis, and chatbots
 
-- Generate AI's that can play and excel at complex games, such as Chess and Go (AlphaGo 2016)
+-   Generate AI's that can play and excel at complex games, such as Chess and Go (AlphaGo 2016)
 
-- Cybersecurity and fraud detection (pattern recognition)
-
-
-
-
-
-
+-   Cybersecurity and fraud detection (pattern recognition)

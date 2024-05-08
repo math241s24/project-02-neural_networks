@@ -14,16 +14,37 @@ execute:
 
 ## Introduction
 
+Machine learning is fundamentally about exploiting patterns in data.
+
+Deep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process.
+
+For this project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict.
+
+We plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships.
+
+We decided to focus on classification tasks, with applications in clustering and computer vision.
+
+Research Question:
+
+How accurately can a simple neural network classify points with their correct clusters?
+
+What are the benefits of using a neural network over other algorithms?
+
 ```{r load-packages, label="load-pkgs", message=FALSE, warning=FALSE}
 library(tidyverse)
 library(neuralnet)
-library(keras)
-library(tensorflow)
 library(shiny)
 library(ggplot2)
-library(neuralnet)
 library(dplyr)
 ```
+
+## Data Generation
+
+To illustrate the power and flexibility of neural networks, we created multiple datasets with increasingly complex relationships, one that 
+
+Each dataset contains two continuous predictor variables `x` and `y`, and one categorical response variable `label` with factors a and b.
+
+Two continuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets. 
 
 ```{r load-data}
 genGauss <- function(cx, cy, num_samples, variance, label) {
@@ -136,9 +157,39 @@ test3 <- split_data3$test
 split_data4 <- train_test_split(spiral_data)
 train4 <- split_data4$train
 test4 <- split_data4$test
-
-
 ```
+
+```{r}
+#Code for plotting predictions
+
+# Function for creating a 200 by 200 grid of 'tiles'
+generate_grid <- function(data) {
+  x_range <- seq(min(data$x)-1, max(data$x)+1, length.out=200)
+  y_range <- seq(min(data$y)-1, max(data$y)+1, length.out=200)
+  grid <- expand.grid(x=x_range, y=y_range)
+  return(grid)
+}
+
+# Function for generating predictions for each 'tile'
+predict_grid <- function(model, grid) {
+  grid$pred <- predict(model, grid)
+  grid$pred_label <- ifelse(grid$pred[,1] > grid$pred[,2], 'a', 'b')
+  return(grid)
+}
+
+# Function for plotting the data as well as the predictions
+plot_prediction <- function(grid, data, title) {
+  ggplot() +
+    geom_tile(data=grid, aes(x=x, y=y, fill=pred_label), alpha=0.5) +
+    geom_point(data=data, aes(x=x, y=y, color=label), alpha=0.8) +
+    scale_fill_manual(values=c('a'='blue', 'b'='red')) +
+    scale_color_manual(values=c('a'='blue', 'b'='red')) +
+    labs(title=title, fill="Predicted Label", color="Actual Label") +
+    theme_minimal()
+}
+```
+
+## Model 1: Gaussian Distributed Data Model
 
 ```{r}
 set.seed(932)
@@ -165,6 +216,14 @@ print(accuracy)
 ```
 
 ```{r}
+grid1 <- generate_grid(data_two)
+grid1$pred_label <- predict_grid(model1, grid1)$pred_label
+p1 <- plot_prediction(grid1, data_two, "Model 1 Predictions")
+```
+
+## Model 2: Classes Split by Y-Axis
+
+```{r}
 set.seed(932)
 model2 <- neuralnet(label~x+y, data=train2, hidden=c(5,5), linear.output=FALSE)
 plot(model2, rep="best")
@@ -187,6 +246,15 @@ accuracy <- (sum(check)/nrow(test2))*100
 print(accuracy)
 
 ```
+
+```{r}
+grid2 <- generate_grid(data_by_x)
+grid2$pred_label <- predict_grid(model2, grid2)$pred_label
+p2 <- plot_prediction(grid2, data_by_x, "Model 2 Predictions")
+p2
+```
+
+## Model 3: Classes Split by Quadrants
 
 ```{r}
 set.seed(932)
@@ -213,6 +281,15 @@ accuracy <- (sum(check)/nrow(test3))*100
 print(accuracy)
 
 ```
+
+```{r}
+grid3 <- generate_grid(data_by_xy)
+grid3$pred_label <- predict_grid(model3, grid3)$pred_label
+p3 <- plot_prediction(grid3, data_by_xy, "Model 3 Predictions")
+p3
+```
+
+## Model 4: Spiral Data
 
 ```{r}
 set.seed(932)
@@ -270,51 +347,23 @@ table(test4$label, prediction_label)
 ```
 
 ```{r}
-generate_grid <- function(data) {
-  x_range <- seq(min(data$x)-1, max(data$x)+1, length.out=200)
-  y_range <- seq(min(data$y)-1, max(data$y)+1, length.out=200)
-  grid <- expand.grid(x=x_range, y=y_range)
-  return(grid)
-}
-
-grid1 <- generate_grid(data_two)
-grid2 <- generate_grid(data_by_x)
-grid3 <- generate_grid(data_by_xy)
 grid4 <- generate_grid(spiral_data)
 grid4_no_layers <- generate_grid(spiral_data)
 grid4_5node_layer <- generate_grid(spiral_data)
-
 ```
 
 ```{r}
-predict_grid <- function(model, grid) {
-  grid$pred <- predict(model, grid)
-  grid$pred_label <- ifelse(grid$pred[,1] > grid$pred[,2], 'a', 'b')
-  return(grid)
-}
-grid1$pred_label <- predict_grid(model1, grid1)$pred_label
-grid2$pred_label <- predict_grid(model2, grid2)$pred_label
-grid3$pred_label <- predict_grid(model3, grid3)$pred_label
 grid4$pred_label <- predict_grid(model4, grid4)$pred_label
-
 grid4_no_layers$pred_label <- predict_grid(model4_no_layers, grid4)$pred_label
-
 grid4_5node_layer$pred_label <- predict_grid(model4_5node_layer, grid4)$pred_label
+p4 <- plot_prediction(grid4, spiral_data, "Model 1 Predictions")
+p4
 ```
 
 ```{r}
-plot_prediction <- function(grid, data, title) {
-  ggplot() +
-    geom_tile(data=grid, aes(x=x, y=y, fill=pred_label), alpha=0.5) +
-    geom_point(data=data, aes(x=x, y=y, color=label), alpha=0.8) +
-    scale_fill_manual(values=c('a'='blue', 'b'='red')) +
-    scale_color_manual(values=c('a'='blue', 'b'='red')) +
-    labs(title=title, fill="Predicted Label", color="Actual Label") +
-    theme_minimal()
-}
 
 
-p1 <- plot_prediction(grid1, data_two, "Model 1 Predictions")
+
 p2 <- plot_prediction(grid2, data_by_x, "Model 2 Predictions")
 p3 <- plot_prediction(grid3, data_by_xy, "Model 3 Predictions")
 p4 <- plot_prediction(grid4, spiral_data, "Model 4 Predictions")
@@ -322,10 +371,7 @@ p4_no_layers <- plot_prediction(grid4_no_layers, spiral_data, "Model 4.no layers
 p4_5node_layer <- plot_prediction(grid4_5node_layer, spiral_data, "Model 4. 5 layer Predictions")
 
 
-print(p1)
-print(p2)
-print(p3)
-print(p4)
+
 p4_no_layers
 p4_5node_layer
 ```
