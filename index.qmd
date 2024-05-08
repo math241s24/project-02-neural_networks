@@ -1,7 +1,6 @@
 ---
 title: "Project 2 Proposal: Clasifying generated data using Neural Networks in R"
-subtitle: "Project 2"
-author: ""
+author: "Elliott Chang, Cameron Adams"
 format: html
 editor: visual
 execute:
@@ -10,7 +9,15 @@ execute:
   message: false
 ---
 
-## Abstract
+```{r, echo = TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(neuralnet)
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(cowplot)
+library(knitr)
+```
 
 ## Introduction
 
@@ -20,30 +27,25 @@ We plan on illustrating the predictive power and flexibility of Neural Networks 
 
 Research Question:
 
-- How accurately can a simple neural network classify points with their correct clusters?
+-   How accurately can a simple neural network classify points with their correct clusters?
 
-- What are the benefits of using a neural network over other algorithms?
-
-```{r, message=FALSE, warning=FALSE}
-library(tidyverse)
-library(neuralnet)
-library(shiny)
-library(ggplot2)
-library(dplyr)
-library(cowplot)
-```
+-   What are the benefits of using a neural network over other algorithms?
 
 ## What is a Neural Network?
 
 A neural network machine learning algorithm modeled on the human brain and nervous system (hence NEURAL network). Neural networks contain a lattice of nodes, organized into layers, each of which can be thought of as its own linear regression model. Analogously, the 'weights' associated to a node can be viewed as slope coefficients and 'biases' can be viewed as the intercept terms. These weights and biases are assigned randomly at first, then iteratively changed to reduce the training error. Each additional node allows for a different linear relationships and adding more 'layers' of nodes allows for more flexible, non-linear relationships. Similar to decision trees, one can think of neural networks as 'partitioning' the predictor space into regions of certain classes (in the context of classification).
 
+```{r, echo=FALSE, fig.align='center'}
+include_graphics("data/neuralnetwork.png")
+```
+
 ## Data Generation
 
 To illustrate the power and flexibility of neural networks, we created multiple datasets with increasingly complex relationships.
 
-Each dataset contains two continuous predictor variables `x` and `y`, and one categorical response variable `label` with factors a and b.
+Each dataset contains two continuous predictor variables `x` and `y`, and one categorical response variable `label` with factors `a` and `b`.
 
-The two continuous predictors allow us to visualize the relationship between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets. 
+The two continuous predictors allow us to visualize the relationship between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets.
 
 ```{r load-data}
 genGauss <- function(cx, cy, num_samples, variance, label) {
@@ -92,7 +94,6 @@ data_by_xy <- generateDataByXYProduct(1000)
 ```
 
 ```{r}
-
 generateSpiralData <- function(num_samples, noise) {
   n <- num_samples / 2  # Half for each label
   points <- data.frame(x=numeric(0), y=numeric(0), label=character(0))
@@ -156,7 +157,9 @@ train4 <- split_data4$train
 test4 <- split_data4$test
 ```
 
-```{r}
+Displayed below are some functions we developed for plotting the paritioning of the predictor space based on our model predictions and the data.
+
+```{r, echo = TRUE}
 #Code for plotting predictions
 
 # Function for creating a 200 by 200 grid of 'tiles'
@@ -188,12 +191,25 @@ plot_prediction <- function(grid, data, title) {
 
 ## Model 1: Gaussian Distributed Data Model
 
+For our first model, we wish to predict the classes based on our Gaussian distributed data. As a reminder, our data looks like:
+
 ```{r}
+ggplot(data_two, aes(x=x, y=y, color=factor(label))) +
+  geom_point(alpha=0.6) +
+  labs(title="Classify Two Gauss Data", color="Label") +
+  theme_minimal()
+```
+
+For this, we will use a neural network with two hidden layers, each containing 5 nodes. The final model will consist of weights and biases for each node. The code for the model is displayed below, along with the architecture of the model, labeled with the weights and biases.
+
+```{r, echo=TRUE}
 set.seed(932)
 model1 <- neuralnet(label~x+y, data=train1, hidden=c(5,5), linear.output=FALSE)
 d1 <- plot(model1, rep="best")
 d1
 ```
+
+Now, we can look at the confusion matrix to determine the overall accuracy of the model, as well as its sensitivity and specificity.
 
 ```{r}
 pred <- predict(model1, test1)
@@ -203,8 +219,9 @@ prediction_label <- data.frame(max.col(pred)) %>%
   select(2) %>%
   unlist()
 table(test1$label, prediction_label)
-
 ```
+
+This model produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points. 
 
 ```{r}
 check <- ifelse(test1$label == 'a', 1, 2) == max.col(pred)
@@ -216,15 +233,30 @@ print(accuracy)
 grid1 <- generate_grid(data_two)
 grid1$pred_label <- predict_grid(model1, grid1)$pred_label
 p1 <- plot_prediction(grid1, data_two, "Model 1 Predictions")
+p1
 ```
 
 ## Model 2: Classes Split by Y-Axis
 
+For our second model, we wish to predict the classes based on 'split' data. This data looks like:
+
 ```{r}
+ggplot(data_by_x, aes(x=x, y=y, color=factor(label))) +
+  geom_point(alpha=0.6) +
+  labs(title="Data Classified by X Value", color="Label") +
+  theme_minimal()
+```
+
+
+Again, we will use a neural network with two hidden layers, each containing 5 nodes. The code for the model is displayed below, along with the architecture of the model, labeled with the weights and biases. Notice that despite the architecture of the model being the same as the previous model, the associated weights and biases are different!
+
+```{r, echo=TRUE}
 set.seed(932)
 model2 <- neuralnet(label~x+y, data=train2, hidden=c(5,5), linear.output=FALSE)
 plot(model2, rep="best")
 ```
+
+Now, we can look at the confusion matrix to determine the overall accuracy of the model, as well as its sensitivity and specificity.
 
 ```{r}
 pred <- predict(model2, test2)
@@ -236,12 +268,12 @@ prediction_label <- data.frame(max.col(pred)) %>%
 table(test2$label, prediction_label)
 
 ```
+This model also produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points. 
 
 ```{r}
 check <- ifelse(test2$label == 'a', 1, 2) == max.col(pred)
 accuracy <- (sum(check)/nrow(test2))*100
 print(accuracy)
-
 ```
 
 ```{r}
@@ -253,12 +285,24 @@ p2
 
 ## Model 3: Classes Split by Quadrants
 
+For our third model, we wish to predict the classes based on data split into quadrants. This data looks like:
+
 ```{r}
+ggplot(data_by_xy, aes(x=x, y=y, color=factor(label))) +
+  geom_point(alpha=0.6) +
+  labs(title="Data Classified by XY Product", color="Label") +
+  theme_minimal()
+```
+
+For the third model, we can also use a neural network with two hidden layers, each containing 5 nodes (remember, flexibility)! The code for the model is displayed below, along with the architecture of the model, labeled with the weights and biases. Again, despite the architecture of the model being the same as the previous two models, the associated weights and biases are different!
+
+```{r, echo = TRUE}
 set.seed(932)
 model3 <- neuralnet(label~x+y, data=train3, hidden=c(5,5), linear.output=FALSE)
 plot(model3, rep="best")
-
 ```
+
+Now, we can look at the confusion matrix to determine the overall accuracy of the model, as well as its sensitivity and specificity.
 
 ```{r}
 set.seed(932)
@@ -272,11 +316,12 @@ table(test3$label, prediction_label)
 
 ```
 
+This model also produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points. 
+
 ```{r}
 check <- ifelse(test3$label == 'a', 1, 2) == max.col(pred)
 accuracy <- (sum(check)/nrow(test3))*100
 print(accuracy)
-
 ```
 
 ```{r}
@@ -288,9 +333,19 @@ p3
 
 ## Model 4: Spiral Data
 
-```{r}
-set.seed(932)
+Finally, for our fourth model, we wish to predict the classes based on spiral, by far the most complex relationship of the bunch. This data looks like:
 
+```{r}
+ggplot(spiral_data, aes(x=x, y=y, color=factor(label))) +
+  geom_point(alpha=0.6) +
+  labs(title="Spiral Data", color="Label") +
+  theme_minimal()
+```
+
+Here, to illustrate how imperative the architecture of the model is to its accuracy, we will fit three different models. The first model is a simple neural network with no hidden layers. This is esentially equivalent to running a linear regression model
+
+```{r, echo = TRUE}
+set.seed(932)
 model4_no_layers <- neuralnet(
     label~x + y,
     data=train4,
@@ -298,25 +353,11 @@ model4_no_layers <- neuralnet(
     learningrate=0.001,
     stepmax=1e+06
 )
+```
 
-model4_5node_layer <- neuralnet(
-    label~x + y,
-    data=train4,
-    hidden=c(5),
-    linear.output=FALSE,
-    learningrate=0.001,
-    stepmax=1e+06
-)
+Unsurprisingly, after testing our model on the testing data, we can see that the model only produced a 58% test accuracy, only slightly more accurate than randomly guessing the classes of the points.
 
-model4 <- neuralnet(
-    label~x + y,
-    data=train4,
-    hidden=c(8,8),
-    linear.output=FALSE,
-    learningrate=0.001,
-    stepmax=1e+06
-)
-
+```{r}
 pred <- predict(model4_no_layers, test4)
 labels <- c("a", "b")
 prediction_label <- data.frame(max.col(pred)) %>%
@@ -325,6 +366,37 @@ prediction_label <- data.frame(max.col(pred)) %>%
   unlist()
 table(test4$label, prediction_label)
 
+check <- ifelse(test4$label == 'a', 1, 2) == max.col(pred)
+accuracy <- (sum(check)/nrow(test3))*100
+accuracy
+```
+Displayed below is a visualization of the predictions our model is making:
+
+```{r}
+grid4_no_layers <- generate_grid(spiral_data)
+grid4_no_layers$pred_label <- predict_grid(model4_no_layers, grid4_no_layers)$pred_label
+p4_no_layers <- plot_prediction(grid4_no_layers, spiral_data, "Model 4 No Layers Predictions")
+p4_no_layers
+```
+
+
+The second model has only one hidden layer with 5 nodes, a slightly more complex model than the previous one.
+
+```{r, echo=TRUE}
+set.seed(932)
+model4_5node_layer <- neuralnet(
+    label~x + y,
+    data=train4,
+    hidden=c(5),
+    linear.output=FALSE,
+    learningrate=0.001,
+    stepmax=1e+06
+)
+```
+
+After testing our model on the testing data, we can see that the model produced a 73% test accuracy, a large improvement from our previous model
+
+```{r}
 pred <- predict(model4_5node_layer, test4)
 labels <- c("a", "b")
 prediction_label <- data.frame(max.col(pred)) %>%
@@ -333,6 +405,37 @@ prediction_label <- data.frame(max.col(pred)) %>%
   unlist()
 table(test4$label, prediction_label)
 
+check <- ifelse(test4$label == 'a', 1, 2) == max.col(pred)
+accuracy <- (sum(check)/nrow(test3))*100
+accuracy
+```
+
+We can also see that the partitions of the predictor space are slightly more complex.
+
+```{r}
+grid4_5node_layer <- generate_grid(spiral_data)
+grid4_5node_layer$pred_label <- predict_grid(model4_5node_layer, grid4_5node_layer)$pred_label
+p4_5node_layer <- plot_prediction(grid4_5node_layer, spiral_data, "Model 4. 5 layer Predictions")
+p4_5node_layer
+```
+
+Finally, our third model is the most complex with two hidden layers each containing 8 nodes.
+
+```{r, echo=TRUE}
+set.seed(932)
+model4 <- neuralnet(
+    label~x + y,
+    data=train4,
+    hidden=c(8,8),
+    linear.output=FALSE,
+    learningrate=0.001,
+    stepmax=1e+06
+)
+```
+
+After testing this model on the testing data, we can see that the model produced a 98% test accuracy, significantly better than either of our previous models!
+
+```{r}
 pred <- predict(model4, test4)
 labels <- c("a", "b")
 prediction_label <- data.frame(max.col(pred)) %>%
@@ -341,34 +444,28 @@ prediction_label <- data.frame(max.col(pred)) %>%
   unlist()
 table(test4$label, prediction_label)
 
+check <- ifelse(test4$label == 'a', 1, 2) == max.col(pred)
+accuracy <- (sum(check)/nrow(test3))*100
+accuracy
 ```
+The complexity of our model as well as the high predictive accuracy are reflected in the partitions of the predictor space.
 
 ```{r}
 grid4 <- generate_grid(spiral_data)
-grid4_no_layers <- generate_grid(spiral_data)
-grid4_5node_layer <- generate_grid(spiral_data)
-```
-
-```{r}
 grid4$pred_label <- predict_grid(model4, grid4)$pred_label
-grid4_no_layers$pred_label <- predict_grid(model4_no_layers, grid4)$pred_label
-grid4_5node_layer$pred_label <- predict_grid(model4_5node_layer, grid4)$pred_label
 p4 <- plot_prediction(grid4, spiral_data, "Model 1 Predictions")
 p4
 ```
 
-```{r}
-p4_no_layers <- plot_prediction(grid4_no_layers, spiral_data, "Model 4.no layers Predictions")
-p4_5node_layer <- plot_prediction(grid4_5node_layer, spiral_data, "Model 4. 5 layer Predictions")
+## Discussion and Conclusion
 
+As we showed, our neural networks were able to find the patterns in our data set relatively easily. The first three (Gauss, X, XY) data sets use pretty simple neural networks that didn't take too long to train and were extremely accurate, getting accuracy all greater than 99%. The Spiral data set was much more complex, and needed a more complex neural network which required more time, but it was able to accurately (98%, with it actually being close to impossible to get 100% as some data points with different labels overlapped) label the data. We were able to show case these with our default values in our presentation and shiny app, with users able to use the shinny app to explore their own neural network architectures in order to see the impact on each data set. The caveat is that the spiral data set would often crash R if messed around with too much but the shinny app worked well with the other data sets. In conclusion we are very happy with our project and believe we adiquetly illustrated the power of neural networks
 
+This was a pretty basic showcase of the power of Neural networks, but there's so much that could be built off of what we've done. While working on this we discussed that what we were doing was not too far off of banknote security. As an extension, one could take a fraudulent bank note data set and see how well different network architectures would do on a bank note data set, or even more complex cyber security problems.
 
-p4_no_layers
-p4_5node_layer
-```
+Finally, displayed below is the code for a Shiny App that allows users to train their own neural networks on the four datasets we created.
 
-```{r, eval = FALSE}
-
+```{r, eval = FALSE, echo=TRUE}
 ui <- fluidPage(
   titlePanel("Neural Networks Visualization"),
   sidebarLayout(

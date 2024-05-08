@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="">
+<meta name="author" content="Elliott Chang, Cameron Adams">
 
-<title>Project 2 -</title>
+<title>Project 2 - Project 2 Proposal: Clasifying generated data using Neural Networks in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -120,13 +154,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#what-is-a-neural-network" id="toc-what-is-a-neural-network" class="nav-link" data-scroll-target="#what-is-a-neural-network">What is a Neural Network?</a></li>
   <li><a href="#data-generation" id="toc-data-generation" class="nav-link" data-scroll-target="#data-generation">Data Generation</a></li>
   <li><a href="#model-1-gaussian-distributed-data-model" id="toc-model-1-gaussian-distributed-data-model" class="nav-link" data-scroll-target="#model-1-gaussian-distributed-data-model">Model 1: Gaussian Distributed Data Model</a></li>
   <li><a href="#model-2-classes-split-by-y-axis" id="toc-model-2-classes-split-by-y-axis" class="nav-link" data-scroll-target="#model-2-classes-split-by-y-axis">Model 2: Classes Split by Y-Axis</a></li>
   <li><a href="#model-3-classes-split-by-quadrants" id="toc-model-3-classes-split-by-quadrants" class="nav-link" data-scroll-target="#model-3-classes-split-by-quadrants">Model 3: Classes Split by Quadrants</a></li>
   <li><a href="#model-4-spiral-data" id="toc-model-4-spiral-data" class="nav-link" data-scroll-target="#model-4-spiral-data">Model 4: Spiral Data</a></li>
+  <li><a href="#discussion-and-conclusion" id="toc-discussion-and-conclusion" class="nav-link" data-scroll-target="#discussion-and-conclusion">Discussion and Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -135,14 +170,19 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"></h1>
-<p class="subtitle lead">Project 2</p>
+<h1 class="title">Project 2 Proposal: Clasifying generated data using Neural Networks in R</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Elliott Chang, Cameron Adams </p>
+          </div>
+  </div>
     
   
     
@@ -151,9 +191,15 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="abstract" class="level2">
-<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
-</section>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(neuralnet)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>Machine learning is fundamentally about exploiting patterns in data. Deep learning is a branch of machine learning which opts for huge expressive power, but loses almost all interpretability in the process. For this project we will be exploring <em>neural networks</em>, deep learning models which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict.</p>
@@ -164,42 +210,83 @@ ul.task-list li input[type="checkbox"] {
 <li><p>What are the benefits of using a neural network over other algorithms?</p></li>
 </ul>
 </section>
+<section id="what-is-a-neural-network" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-a-neural-network">What is a Neural Network?</h2>
+<p>A neural network machine learning algorithm modeled on the human brain and nervous system (hence NEURAL network). Neural networks contain a lattice of nodes, organized into layers, each of which can be thought of as its own linear regression model. Analogously, the ‘weights’ associated to a node can be viewed as slope coefficients and ‘biases’ can be viewed as the intercept terms. These weights and biases are assigned randomly at first, then iteratively changed to reduce the training error. Each additional node allows for a different linear relationships and adding more ‘layers’ of nodes allows for more flexible, non-linear relationships. Similar to decision trees, one can think of neural networks as ‘partitioning’ the predictor space into regions of certain classes (in the context of classification).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="data/neuralnetwork.png" class="img-fluid figure-img" width="418"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="data-generation" class="level2">
 <h2 class="anchored" data-anchor-id="data-generation">Data Generation</h2>
-<p>To illustrate the power and flexibility of neural networks, we created multiple datasets with increasingly complex relationships, one that</p>
-<p>Each dataset contains two continuous predictor variables <code>x</code> and <code>y</code>, and one categorical response variable <code>label</code> with factors a and b.</p>
-<p>Two continuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets.</p>
+<p>To illustrate the power and flexibility of neural networks, we created multiple datasets with increasingly complex relationships.</p>
+<p>Each dataset contains two continuous predictor variables <code>x</code> and <code>y</code>, and one categorical response variable <code>label</code> with factors <code>a</code> and <code>b</code>.</p>
+<p>The two continuous predictors allow us to visualize the relationship between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/load-data-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>This is where neural networks become extremely useful. Due to their previously mentioned flexibility, different neural networks with the exact same structure can be trained on vastly different datasets and still produce high predictive accuracy.</p>
+<p>Displayed below are some functions we developed for plotting the paritioning of the predictor space based on our model predictions and the data.</p>
 <div class="cell">
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
-</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Code for plotting predictions</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Function for creating a 200 by 200 grid of 'tiles'</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>generate_grid <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  x_range <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(data<span class="sc">$</span>x)<span class="sc">-</span><span class="dv">1</span>, <span class="fu">max</span>(data<span class="sc">$</span>x)<span class="sc">+</span><span class="dv">1</span>, <span class="at">length.out=</span><span class="dv">200</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  y_range <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(data<span class="sc">$</span>y)<span class="sc">-</span><span class="dv">1</span>, <span class="fu">max</span>(data<span class="sc">$</span>y)<span class="sc">+</span><span class="dv">1</span>, <span class="at">length.out=</span><span class="dv">200</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x=</span>x_range, <span class="at">y=</span>y_range)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(grid)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Function for generating predictions for each 'tile'</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>predict_grid <span class="ot">&lt;-</span> <span class="cf">function</span>(model, grid) {</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  grid<span class="sc">$</span>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, grid)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  grid<span class="sc">$</span>pred_label <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(grid<span class="sc">$</span>pred[,<span class="dv">1</span>] <span class="sc">&gt;</span> grid<span class="sc">$</span>pred[,<span class="dv">2</span>], <span class="st">'a'</span>, <span class="st">'b'</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(grid)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Function for plotting the data as well as the predictions</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>plot_prediction <span class="ot">&lt;-</span> <span class="cf">function</span>(grid, data, title) {</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>(<span class="at">data=</span>grid, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">fill=</span>pred_label), <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data=</span>data, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">color=</span>label), <span class="at">alpha=</span><span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">'a'</span><span class="ot">=</span><span class="st">'blue'</span>, <span class="st">'b'</span><span class="ot">=</span><span class="st">'red'</span>)) <span class="sc">+</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">'a'</span><span class="ot">=</span><span class="st">'blue'</span>, <span class="st">'b'</span><span class="ot">=</span><span class="st">'red'</span>)) <span class="sc">+</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span>title, <span class="at">fill=</span><span class="st">"Predicted Label"</span>, <span class="at">color=</span><span class="st">"Actual Label"</span>) <span class="sc">+</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="model-1-gaussian-distributed-data-model" class="level2">
 <h2 class="anchored" data-anchor-id="model-1-gaussian-distributed-data-model">Model 1: Gaussian Distributed Data Model</h2>
+<p>For our first model, we wish to predict the classes based on our Gaussian distributed data. As a reminder, our data looks like:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
+</div>
+<p>For this, we will use a neural network with two hidden layers, each containing 5 nodes. The final model will consist of weights and biases for each node. The code for the model is displayed below, along with the architecture of the model, labeled with the weights and biases.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">932</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(label<span class="sc">~</span>x<span class="sc">+</span>y, <span class="at">data=</span>train1, <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="at">linear.output=</span><span class="cn">FALSE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">plot</span>(model1, <span class="at">rep=</span><span class="st">"best"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>d1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>NULL</code></pre>
 </div>
 </div>
+<p>Now, we can look at the confusion matrix to determine the overall accuracy of the model, as well as its sensitivity and specificity.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>   prediction_label
@@ -208,19 +295,36 @@ ul.task-list li input[type="checkbox"] {
   b   0  87</code></pre>
 </div>
 </div>
+<p>This model produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 100</code></pre>
 </div>
 </div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section>
 <section id="model-2-classes-split-by-y-axis" class="level2">
 <h2 class="anchored" data-anchor-id="model-2-classes-split-by-y-axis">Model 2: Classes Split by Y-Axis</h2>
+<p>For our second model, we wish to predict the classes based on ‘split’ data. This data looks like:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Again, we will use a neural network with two hidden layers, each containing 5 nodes. The code for the model is displayed below, along with the architecture of the model, labeled with the weights and biases. Notice that despite the architecture of the model being the same as the previous model, the associated weights and biases are different!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">932</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(label<span class="sc">~</span>x<span class="sc">+</span>y, <span class="at">data=</span>train2, <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="at">linear.output=</span><span class="cn">FALSE</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model2, <span class="at">rep=</span><span class="st">"best"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now, we can look at the confusion matrix to determine the overall accuracy of the model, as well as its sensitivity and specificity.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>   prediction_label
@@ -229,32 +333,7 @@ ul.task-list li input[type="checkbox"] {
   b   0 101</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 100</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
-<section id="model-3-classes-split-by-quadrants" class="level2">
-<h2 class="anchored" data-anchor-id="model-3-classes-split-by-quadrants">Model 3: Classes Split by Quadrants</h2>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>   prediction_label
-      a   b
-  a 105   0
-  b   0  95</code></pre>
-</div>
-</div>
+<p>This model also produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 100</code></pre>
@@ -266,8 +345,64 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
+<section id="model-3-classes-split-by-quadrants" class="level2">
+<h2 class="anchored" data-anchor-id="model-3-classes-split-by-quadrants">Model 3: Classes Split by Quadrants</h2>
+<p>For our third model, we wish to predict the classes based on data split into quadrants. This data looks like:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>For the third model, we can also use a neural network with two hidden layers, each containing 5 nodes (remember, flexibility)! The code for the model is displayed below, along with the architecture of the model, labeled with the weights and biases. Again, despite the architecture of the model being the same as the previous two models, the associated weights and biases are different!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">932</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(label<span class="sc">~</span>x<span class="sc">+</span>y, <span class="at">data=</span>train3, <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="at">linear.output=</span><span class="cn">FALSE</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model3, <span class="at">rep=</span><span class="st">"best"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now, we can look at the confusion matrix to determine the overall accuracy of the model, as well as its sensitivity and specificity.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   prediction_label
+      a   b
+  a 105   0
+  b   0  95</code></pre>
+</div>
+</div>
+<p>This model also produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 100</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 <section id="model-4-spiral-data" class="level2">
 <h2 class="anchored" data-anchor-id="model-4-spiral-data">Model 4: Spiral Data</h2>
+<p>Finally, for our fourth model, we wish to predict the classes based on spiral, by far the most complex relationship of the bunch. This data looks like:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Here, to illustrate how imperative the architecture of the model is to its accuracy, we will fit three different models. The first model is a simple neural network with no hidden layers. This is esentially equivalent to running a linear regression model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">932</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>model4_no_layers <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    label<span class="sc">~</span>x <span class="sc">+</span> y,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>train4,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">linear.output=</span><span class="cn">FALSE</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">learningrate=</span><span class="fl">0.001</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">stepmax=</span><span class="fl">1e+06</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Unsurprisingly, after testing our model on the testing data, we can see that the model only produced a 58% test accuracy, only slightly more accurate than randomly guessing the classes of the points.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>   prediction_label
@@ -276,30 +411,167 @@ ul.task-list li input[type="checkbox"] {
   b 43 60</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   prediction_label
-     a  b
-  a 73 24
-  b 28 75</code></pre>
+<pre><code>[1] 58</code></pre>
 </div>
+</div>
+<p>Displayed below is a visualization of the predictions our model is making:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The second model has only one hidden layer with 5 nodes, a slightly more complex model than the previous one.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">932</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>model4_5node_layer <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    label<span class="sc">~</span>x <span class="sc">+</span> y,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>train4,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">5</span>),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">linear.output=</span><span class="cn">FALSE</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">learningrate=</span><span class="fl">0.001</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">stepmax=</span><span class="fl">1e+06</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After testing our model on the testing data, we can see that the model produced a 73% test accuracy, a large improvement from our previous model</p>
+<div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>   prediction_label
      a  b
-  a 94  3
-  b  5 98</code></pre>
+  a 65 32
+  b 22 81</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 73</code></pre>
 </div>
 </div>
+<p>We can also see that the partitions of the predictor space are slightly more complex.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Finally, our third model is the most complex with two hidden layers each containing 8 nodes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">932</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="fu">neuralnet</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    label<span class="sc">~</span>x <span class="sc">+</span> y,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>train4,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hidden=</span><span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">8</span>),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">linear.output=</span><span class="cn">FALSE</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">learningrate=</span><span class="fl">0.001</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">stepmax=</span><span class="fl">1e+06</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After testing this model on the testing data, we can see that the model produced a 98% test accuracy, significantly better than either of our previous models!</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   prediction_label
+      a   b
+  a  96   1
+  b   3 100</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 98</code></pre>
+</div>
+</div>
+<p>The complexity of our model as well as the high predictive accuracy are reflected in the partitions of the predictor space.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid" width="672"></p>
 </div>
+</section>
+<section id="discussion-and-conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-and-conclusion">Discussion and Conclusion</h2>
+<p>As we showed, our neural networks were able to find the patterns in our data set relatively easily. The first three (Gauss, X, XY) data sets use pretty simple neural networks that didn’t take too long to train and were extremely accurate, getting accuracy all greater than 99%. The Spiral data set was much more complex, and needed a more complex neural network which required more time, but it was able to accurately (98%, with it actually being close to impossible to get 100% as some data points with different labels overlapped) label the data. We were able to show case these with our default values in our presentation and shiny app, with users able to use the shinny app to explore their own neural network architectures in order to see the impact on each data set. The caveat is that the spiral data set would often crash R if messed around with too much but the shinny app worked well with the other data sets. In conclusion we are very happy with our project and believe we adiquetly illustrated the power of neural networks</p>
+<p>This was a pretty basic showcase of the power of Neural networks, but there’s so much that could be built off of what we’ve done. While working on this we discussed that what we were doing was not too far off of banknote security. As an extension, one could take a fraudulent bank note data set and see how well different network architectures would do on a bank note data set, or even more complex cyber security problems.</p>
+<p>Finally, displayed below is the code for a Shiny App that allows users to train their own neural networks on the four datasets we created.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">titlePanel</span>(<span class="st">"Neural Networks Visualization"</span>),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sidebarLayout</span>(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarPanel</span>(</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">selectInput</span>(<span class="st">"dataset"</span>, <span class="st">"Choose a dataset:"</span>, <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">"Gaussian distribution"</span> <span class="ot">=</span> <span class="st">"data_two"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                                                             <span class="st">"Horizontal split"</span> <span class="ot">=</span> <span class="st">"data_by_x"</span>, </span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>                                                             <span class="st">"Quadrants"</span> <span class="ot">=</span> <span class="st">"data_by_xy"</span>, </span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                                                             <span class="st">"Spiral data"</span> <span class="ot">=</span> <span class="st">"spiral_data"</span>)),</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">selectInput</span>(<span class="st">"learningRate"</span>, <span class="st">"Choose Learning rate"</span>, <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">"default"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                                                                      <span class="st">"0.3"</span>, </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>                                                                      <span class="st">"0.01"</span>, </span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                                                                      <span class="st">"0.003"</span>, </span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                                                                      <span class="st">"0.001"</span>, </span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>                                                                      <span class="st">"0.0003"</span>,</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>                                                                      <span class="st">"0.0001"</span>)),</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">selectInput</span>(<span class="st">"HiddenLayers"</span>, <span class="st">"Choose Number of nodes in 2 layers:"</span>, <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">"default"</span>,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>                                                                                 <span class="st">"3"</span>, </span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>                                                                                 <span class="st">"4"</span>, </span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>                                                                                 <span class="st">"5"</span>,</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>                                                                                 <span class="st">"6"</span>,</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>                                                                                 <span class="st">"7"</span>,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>                                                                                 <span class="st">"8"</span>,</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>                                                                                 <span class="st">"9"</span>)),</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">actionButton</span>(<span class="st">"runModel"</span>, <span class="st">"Run Model"</span>)</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mainPanel</span>(</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">plotOutput</span>(<span class="st">"scatterPlot"</span>)</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>  plotData <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">#basic pulls with default from above</span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (input<span class="sc">$</span>HiddenLayers <span class="sc">==</span> <span class="st">"default"</span> <span class="sc">&amp;&amp;</span> input<span class="sc">$</span>learningRate <span class="sc">==</span> <span class="st">"default"</span>) {</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Choose which pre-generated plot to display based on the dataset</span></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (input<span class="sc">$</span>dataset <span class="sc">==</span> <span class="st">"data_two"</span>) {</span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>        p1</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> <span class="cf">if</span> (input<span class="sc">$</span>dataset <span class="sc">==</span> <span class="st">"data_by_x"</span>) {</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>        p2</span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> <span class="cf">if</span> (input<span class="sc">$</span>dataset <span class="sc">==</span> <span class="st">"data_by_xy"</span>) {</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>        p3</span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {  <span class="co"># "spiral_data"</span></span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>        p4</span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Convert numeric if not 'default'</span></span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>      hidden_layers <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(input<span class="sc">$</span>HiddenLayers <span class="sc">!=</span> <span class="st">"default"</span>, <span class="fu">rep</span>(<span class="fu">as.numeric</span>(input<span class="sc">$</span>HiddenLayers), <span class="fu">as.numeric</span>(input<span class="sc">$</span>HiddenLayers)), <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>))</span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>      learning_rate <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(input<span class="sc">$</span>learningRate <span class="sc">!=</span> <span class="st">"default"</span>, <span class="fu">as.numeric</span>(input<span class="sc">$</span>learningRate), <span class="fl">0.01</span>)</span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Dynamic model function</span></span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a>      run_model <span class="ot">&lt;-</span> <span class="cf">function</span>(data, </span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a>                            <span class="at">hidden=</span>hidden_layers,</span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>                            <span class="at">rate=</span>learning_rate) {</span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a>                                                 <span class="fu">neuralnet</span>(label<span class="sc">~</span>x<span class="sc">+</span>y, </span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">data=</span>data, </span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">hidden=</span>hidden,</span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">learningrate=</span>rate,</span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">linear.output=</span><span class="cn">FALSE</span>, </span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">stepmax=</span><span class="fl">1e+06</span>)</span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a>      data_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">data_two =</span> train1, <span class="at">data_by_x =</span> train2, <span class="at">data_by_xy =</span> train3, <span class="at">spiral_data =</span> train4)</span>
+<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a>      model <span class="ot">&lt;-</span> <span class="fu">run_model</span>(data_list[[input<span class="sc">$</span>dataset]])</span>
+<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a>      grid <span class="ot">&lt;-</span> <span class="fu">generate_grid</span>(data_list[[input<span class="sc">$</span>dataset]])</span>
+<span id="cb23-72"><a href="#cb23-72" aria-hidden="true" tabindex="-1"></a>      grid<span class="sc">$</span>pred_label <span class="ot">&lt;-</span> <span class="fu">predict_grid</span>(model, grid)<span class="sc">$</span>pred_label</span>
+<span id="cb23-73"><a href="#cb23-73" aria-hidden="true" tabindex="-1"></a>      <span class="fu">plot_prediction</span>(grid, data_list[[input<span class="sc">$</span>dataset]], <span class="fu">paste</span>(<span class="st">"Model Predictions with LR ="</span>, learning_rate, <span class="st">", Hidden Layers ="</span>, <span class="fu">toString</span>(hidden_layers)))</span>
+<span id="cb23-74"><a href="#cb23-74" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb23-75"><a href="#cb23-75" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb23-76"><a href="#cb23-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-77"><a href="#cb23-77" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Only update the output plot when the button is clicked, doesnt really work</span></span>
+<span id="cb23-78"><a href="#cb23-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>runModel, {</span>
+<span id="cb23-79"><a href="#cb23-79" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>scatterPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb23-80"><a href="#cb23-80" aria-hidden="true" tabindex="-1"></a>      <span class="fu">plotData</span>()</span>
+<span id="cb23-81"><a href="#cb23-81" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb23-82"><a href="#cb23-82" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">ignoreInit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-83"><a href="#cb23-83" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-84"><a href="#cb23-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-85"><a href="#cb23-85" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

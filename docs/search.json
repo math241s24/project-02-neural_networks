@@ -88,7 +88,7 @@
     "href": "presentation.html#the-data-1",
     "title": "Neural Networks",
     "section": "The Data",
-    "text": "The Data\n\n\nDespite the intuitive nature of the relationships, modeling them is quite difficult using tools that we’ve learned about so far in this class"
+    "text": "The Data\n\n\n\n\n\n\nDespite the intuitive nature of the relationships, modeling them is quite difficult using tools that we’ve learned about so far in this class"
   },
   {
     "objectID": "presentation.html#what-is-a-neural-network-1",
@@ -101,8 +101,8 @@
     "objectID": "presentation.html#what-is-machine-learningdeep-learning",
     "href": "presentation.html#what-is-machine-learningdeep-learning",
     "title": "Neural Networks",
-    "section": "What is Machine learning/Deep learning",
-    "text": "What is Machine learning/Deep learning\nMachine learning is fundamentally about exploiting patterns in data.\nDeep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process.\nFor this project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict."
+    "section": "",
+    "text": "Machine learning is fundamentally about exploiting patterns in data.\nDeep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process.\nFor this project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict."
   },
   {
     "objectID": "presentation.html#where-to-go-from-here",
@@ -114,99 +114,127 @@
   {
     "objectID": "index.html#introduction",
     "href": "index.html#introduction",
-    "title": "",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Introduction",
     "text": "Introduction\nMachine learning is fundamentally about exploiting patterns in data. Deep learning is a branch of machine learning which opts for huge expressive power, but loses almost all interpretability in the process. For this project we will be exploring neural networks, deep learning models which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict.\nWe plan on illustrating the predictive power and flexibility of Neural Networks on data with complex relationships. We decided to focus on classification tasks, with applications in clustering and computer vision.\nResearch Question:\n\nHow accurately can a simple neural network classify points with their correct clusters?\nWhat are the benefits of using a neural network over other algorithms?"
   },
   {
     "objectID": "index.html#data-generation",
     "href": "index.html#data-generation",
-    "title": "",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Data Generation",
-    "text": "Data Generation\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with increasingly complex relationships, one that\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nTwo continuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets."
+    "text": "Data Generation\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with increasingly complex relationships.\nEach dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.\nThe two continuous predictors allow us to visualize the relationship between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets.\n\n\n\n\n\nThis is where neural networks become extremely useful. Due to their previously mentioned flexibility, different neural networks with the exact same structure can be trained on vastly different datasets and still produce high predictive accuracy.\nDisplayed below are some functions we developed for plotting the paritioning of the predictor space based on our model predictions and the data.\n\n#Code for plotting predictions\n\n# Function for creating a 200 by 200 grid of 'tiles'\ngenerate_grid &lt;- function(data) {\n  x_range &lt;- seq(min(data$x)-1, max(data$x)+1, length.out=200)\n  y_range &lt;- seq(min(data$y)-1, max(data$y)+1, length.out=200)\n  grid &lt;- expand.grid(x=x_range, y=y_range)\n  return(grid)\n}\n\n# Function for generating predictions for each 'tile'\npredict_grid &lt;- function(model, grid) {\n  grid$pred &lt;- predict(model, grid)\n  grid$pred_label &lt;- ifelse(grid$pred[,1] &gt; grid$pred[,2], 'a', 'b')\n  return(grid)\n}\n\n# Function for plotting the data as well as the predictions\nplot_prediction &lt;- function(grid, data, title) {\n  ggplot() +\n    geom_tile(data=grid, aes(x=x, y=y, fill=pred_label), alpha=0.5) +\n    geom_point(data=data, aes(x=x, y=y, color=label), alpha=0.8) +\n    scale_fill_manual(values=c('a'='blue', 'b'='red')) +\n    scale_color_manual(values=c('a'='blue', 'b'='red')) +\n    labs(title=title, fill=\"Predicted Label\", color=\"Actual Label\") +\n    theme_minimal()\n}"
   },
   {
     "objectID": "index.html#model-1-gaussian-distributed-data-model",
     "href": "index.html#model-1-gaussian-distributed-data-model",
-    "title": "",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Model 1: Gaussian Distributed Data Model",
-    "text": "Model 1: Gaussian Distributed Data Model\n\n\n\n\n\nNULL\n\n\n\n\n   prediction_label\n      a   b\n  a 113   0\n  b   0  87\n\n\n\n\n[1] 100"
+    "text": "Model 1: Gaussian Distributed Data Model\nFor our first model, we wish to predict the classes based on our Gaussian distributed data. As a reminder, our data looks like:\n\n\n\n\n\nFor this, we will use a neural network with two hidden layers, each containing 5 nodes. The final model will consist of weights and biases for each node. The code for the model is displayed below, along with the architecture of the model, labeled with the weights and biases.\n\nset.seed(932)\nmodel1 &lt;- neuralnet(label~x+y, data=train1, hidden=c(5,5), linear.output=FALSE)\nd1 &lt;- plot(model1, rep=\"best\")\n\n\n\nd1\n\nNULL\n\n\nNow, we can look at the confusion matrix to determine the overall accuracy of the model, as well as its sensitivity and specificity.\n\n\n   prediction_label\n      a   b\n  a 113   0\n  b   0  87\n\n\nThis model produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points.\n\n\n[1] 100"
   },
   {
     "objectID": "index.html#model-2-classes-split-by-y-axis",
     "href": "index.html#model-2-classes-split-by-y-axis",
-    "title": "",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Model 2: Classes Split by Y-Axis",
-    "text": "Model 2: Classes Split by Y-Axis\n\n\n\n\n\n\n\n   prediction_label\n      a   b\n  a  99   0\n  b   0 101\n\n\n\n\n[1] 100"
+    "text": "Model 2: Classes Split by Y-Axis\nFor our second model, we wish to predict the classes based on ‘split’ data. This data looks like:\n\n\n\n\n\nAgain, we will use a neural network with two hidden layers, each containing 5 nodes. The code for the model is displayed below, along with the architecture of the model, labeled with the weights and biases. Notice that despite the architecture of the model being the same as the previous model, the associated weights and biases are different!\n\nset.seed(932)\nmodel2 &lt;- neuralnet(label~x+y, data=train2, hidden=c(5,5), linear.output=FALSE)\nplot(model2, rep=\"best\")\n\n\n\n\nNow, we can look at the confusion matrix to determine the overall accuracy of the model, as well as its sensitivity and specificity.\n\n\n   prediction_label\n      a   b\n  a  99   0\n  b   0 101\n\n\nThis model also produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points.\n\n\n[1] 100"
   },
   {
     "objectID": "index.html#model-3-classes-split-by-quadrants",
     "href": "index.html#model-3-classes-split-by-quadrants",
-    "title": "",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Model 3: Classes Split by Quadrants",
-    "text": "Model 3: Classes Split by Quadrants\n\n\n\n\n\n\n\n   prediction_label\n      a   b\n  a 105   0\n  b   0  95\n\n\n\n\n[1] 100"
+    "text": "Model 3: Classes Split by Quadrants\nFor our third model, we wish to predict the classes based on data split into quadrants. This data looks like:\n\n\n\n\n\nFor the third model, we can also use a neural network with two hidden layers, each containing 5 nodes (remember, flexibility)! The code for the model is displayed below, along with the architecture of the model, labeled with the weights and biases. Again, despite the architecture of the model being the same as the previous two models, the associated weights and biases are different!\n\nset.seed(932)\nmodel3 &lt;- neuralnet(label~x+y, data=train3, hidden=c(5,5), linear.output=FALSE)\nplot(model3, rep=\"best\")\n\n\n\n\nNow, we can look at the confusion matrix to determine the overall accuracy of the model, as well as its sensitivity and specificity.\n\n\n   prediction_label\n      a   b\n  a 105   0\n  b   0  95\n\n\nThis model also produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points.\n\n\n[1] 100"
   },
   {
     "objectID": "index.html#model-4-spiral-data",
     "href": "index.html#model-4-spiral-data",
-    "title": "",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Model 4: Spiral Data",
-    "text": "Model 4: Spiral Data\n\n\n   prediction_label\n     a  b\n  a 56 41\n  b 43 60\n\n\n   prediction_label\n     a  b\n  a 73 24\n  b 28 75\n\n\n   prediction_label\n     a  b\n  a 94  3\n  b  5 98"
+    "text": "Model 4: Spiral Data\nFinally, for our fourth model, we wish to predict the classes based on spiral, by far the most complex relationship of the bunch. This data looks like:\n\n\n\n\n\nHere, to illustrate how imperative the architecture of the model is to its accuracy, we will fit three different models. The first model is a simple neural network with no hidden layers. This is esentially equivalent to running a linear regression model\n\nset.seed(932)\nmodel4_no_layers &lt;- neuralnet(\n    label~x + y,\n    data=train4,\n    linear.output=FALSE,\n    learningrate=0.001,\n    stepmax=1e+06\n)\n\nUnsurprisingly, after testing our model on the testing data, we can see that the model only produced a 58% test accuracy, only slightly more accurate than randomly guessing the classes of the points.\n\n\n   prediction_label\n     a  b\n  a 56 41\n  b 43 60\n\n\n[1] 58\n\n\nDisplayed below is a visualization of the predictions our model is making:\n\n\n\n\n\nThe second model has only one hidden layer with 5 nodes, a slightly more complex model than the previous one.\n\nset.seed(932)\nmodel4_5node_layer &lt;- neuralnet(\n    label~x + y,\n    data=train4,\n    hidden=c(5),\n    linear.output=FALSE,\n    learningrate=0.001,\n    stepmax=1e+06\n)\n\nAfter testing our model on the testing data, we can see that the model produced a 73% test accuracy, a large improvement from our previous model\n\n\n   prediction_label\n     a  b\n  a 65 32\n  b 22 81\n\n\n[1] 73\n\n\nWe can also see that the partitions of the predictor space are slightly more complex.\n\n\n\n\n\nFinally, our third model is the most complex with two hidden layers each containing 8 nodes.\n\nset.seed(932)\nmodel4 &lt;- neuralnet(\n    label~x + y,\n    data=train4,\n    hidden=c(8,8),\n    linear.output=FALSE,\n    learningrate=0.001,\n    stepmax=1e+06\n)\n\nAfter testing this model on the testing data, we can see that the model produced a 98% test accuracy, significantly better than either of our previous models!\n\n\n   prediction_label\n      a   b\n  a  96   1\n  b   3 100\n\n\n[1] 98\n\n\nThe complexity of our model as well as the high predictive accuracy are reflected in the partitions of the predictor space."
   },
   {
     "objectID": "proposal.html",
     "href": "proposal.html",
-    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "",
     "text": "library(tidyverse)\nlibrary(neuralnet)\nlibrary(ggplot2)\nlibrary(dplyr)"
   },
   {
     "objectID": "proposal.html#goal",
     "href": "proposal.html#goal",
-    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Goal",
-    "text": "Goal\nOur project aims to develop a neural network model capable of predicting and classifying images based the brightness of individual pixels, utilizing the neuralnet and keras packages in R, in service of introducing the concept of neural networks to the class and exploring how neural networks can be trained in R, specifically in the context of computer vision and image classification."
+    "text": "Goal\nOur project aims to develop a neural network model capable of predicting and classifying our own generated data sets, utilizing the neuralnet and keras packages in R, in service of introducing the concept of neural networks to the class and exploring how neural networks can be trained in R, specifically in the context of computer vision and data set classification."
   },
   {
     "objectID": "proposal.html#dataset",
     "href": "proposal.html#dataset",
-    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Dataset",
-    "text": "Dataset\n\ngenGauss &lt;- function(cx, cy, num_samples, variance, label) {\n  x &lt;- rnorm(num_samples, mean = cx, sd = sqrt(variance))\n  y &lt;- rnorm(num_samples, mean = cy, sd = sqrt(variance))\n  data.frame(x = x, y = y, label = label)\n}\n\n#generates two clusters of data points\nclassifyTwoGaussData &lt;- function(num_samples, noise) {\n  variance_scale &lt;- function(noise) {\n    (1 - noise) * 0.5 + noise * 4\n  }\n  variance &lt;- variance_scale(noise)\n  \n  points1 &lt;- genGauss(2, 2, num_samples / 2, variance, 1)\n  points2 &lt;- genGauss(-2, -2, num_samples / 2, variance, -1)\n  \n  # Combine  datasets\n  points &lt;- rbind(points1, points2)\n  return(points)\n}\n\n\nset.seed(123) \ndata_two &lt;- classifyTwoGaussData(1000, 0.1)\n\n# show data\nggplot(data_two, aes(x = x, y = y, color = factor(label))) +\n  geom_point(alpha = 0.6) +\n  labs(title = \"Classify Two Gauss Data\", color = \"Label\") +\n  theme_minimal()\n\n\n\n\n\ngenerateDataByX &lt;- function(num_samples) {\n  x &lt;- runif(num_samples, min = -5, max = 5)\n  y &lt;- runif(num_samples, min = -5, max = 5) \n  label &lt;- ifelse(x &gt;= 0, 1, -1)              \n  \n  data &lt;- data.frame(x = x, y = y, label = label)\n  return(data)\n}\n\nset.seed(123) \ndata_by_x &lt;- generateDataByX(1000)\n\n#plot\nggplot(data_by_x, aes(x = x, y = y, color = factor(label))) +\n  geom_point(alpha = 0.6) +\n  labs(title = \"Data Classified by X Value\", color = \"Label\") +\n  theme_minimal()\n\n\n\n\n\ngenerateDataByXYProduct &lt;- function(num_samples) {\n  x &lt;- runif(num_samples, min = -5, max = 5) \n  y &lt;- runif(num_samples, min = -5, max = 5)\n  label &lt;- ifelse(x * y &gt;= 0, 1, -1)         \n  \n  data &lt;- data.frame(x = x, y = y, label = label)\n  return(data)\n}\n\nset.seed(123) \ndata_by_xy &lt;- generateDataByXYProduct(1000)\n\nggplot(data_by_xy, aes(x = x, y = y, color = factor(label))) +\n  geom_point(alpha = 0.6) +\n  labs(title = \"Data Classified by XY Product\", color = \"Label\") +\n  theme_minimal()\n\n\n\n\nThe dataset consists of pixel brightness for images of clothing of various types. Each observation represents an individual \\(28 \\times 28\\) grayscale image of an item of clothing, with a variable label indicating the type of clothing (0 - T-shirt/top; 1 - Trouser; 2 - Pullover; 3 - Dress, 4 - Coat; 5 - Sandal; 6 - Shirt; 7 - Sneaker; 8 - Bag; 9 - Ankle boot) and 784 other variables, each representing the brightness of a unique pixel in the image (ordered sequentially from left to right, top to bottom). The training dataset fashion_train contains 60,000 observations and the testing dataset contains 10,000 observations. We chose this data because it is easy to work with and ideal when learning about how neural networks are trained."
+    "text": "Dataset\n\ngenGauss &lt;- function(cx, cy, num_samples, variance, label) {\n  x &lt;- rnorm(num_samples, mean = cx, sd = sqrt(variance))\n  y &lt;- rnorm(num_samples, mean = cy, sd = sqrt(variance))\n  data.frame(x = x, y = y, label = label)\n}\n\n#generates two clusters of data points\nclassifyTwoGaussData &lt;- function(num_samples, noise) {\n  variance_scale &lt;- function(noise) {\n    (1 - noise) * 0.5 + noise * 4\n  }\n  variance &lt;- variance_scale(noise)\n  \n  points1 &lt;- genGauss(2, 2, num_samples / 2, variance, 1)\n  points2 &lt;- genGauss(-2, -2, num_samples / 2, variance, -1)\n  \n  # Combine  datasets\n  points &lt;- rbind(points1, points2)\n  return(points)\n}\n\n\nset.seed(123) \ndata_two &lt;- classifyTwoGaussData(1000, 0.1)\n\n# show data\nggplot(data_two, aes(x = x, y = y, color = factor(label))) +\n  geom_point(alpha = 0.6) +\n  labs(title = \"Classify Two Gauss Data\", color = \"Label\") +\n  theme_minimal()\n\n\n\n\n\ngenerateDataByX &lt;- function(num_samples) {\n  x &lt;- runif(num_samples, min = -5, max = 5)\n  y &lt;- runif(num_samples, min = -5, max = 5) \n  label &lt;- ifelse(x &gt;= 0, 1, -1)              \n  \n  data &lt;- data.frame(x = x, y = y, label = label)\n  return(data)\n}\n\nset.seed(123) \ndata_by_x &lt;- generateDataByX(1000)\n\n#plot\nggplot(data_by_x, aes(x = x, y = y, color = factor(label))) +\n  geom_point(alpha = 0.6) +\n  labs(title = \"Data Classified by X Value\", color = \"Label\") +\n  theme_minimal()\n\n\n\n\nTo illustrate the power and flexibility of neural networks, we created multiple datasets with increasingly complex relationships, one that Each dataset contains two continuous predictor variables x and y, and one categorical response variable label with factors a and b.Two continuous predictors allow us to visualize the relationships between these predictors easily, giving us an intuitive understand of what the underlying relationships might be. However, despite the intuitive nature of the relationships, more traditional models such as linear regression, logistic regression, and decision trees have trouble fitting to all of the data; even if one of these models can predict the relationship of a given dataset, their inflexibility prevents them from fitting well to all of the datasets."
   },
   {
     "objectID": "proposal.html#motivation",
     "href": "proposal.html#motivation",
-    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Motivation",
     "text": "Motivation\nNeural networks represent a cornerstone of modern machine learning, offering significant power in pattern recognition, classification, and prediction tasks. Despite their widespread application across various domains, their implementation and functionality remain a mystery to many. Even to our group, of which both of us have some experience in neural networks, the underlying machinery is fairly opaque. We aim to demystify neural networks, showcasing their capabilities and how they can be implemented using the neuralnet package in R. This project not only serves an educational purpose but also demonstrates practical application in image classification, a prevalent task in AI. The goal will be to make a website and blog post, with the website hopefully being interactive so that people can get a more intuitive understanding of how neural networks work.."
   },
   {
     "objectID": "proposal.html#research-question",
     "href": "proposal.html#research-question",
-    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Research Question",
-    "text": "Research Question\nOur research question is twofold: how accurately can a simple neural network classify images of clothing into their correct categories, based on the brightness of the pixels? and what is the underlying process that allows neural networks to be trained."
+    "text": "Research Question\nOur research question is twofold: how accurately can different neural networks classify different simple to slightly complex generated datasets and what is the underlying process that allows neural networks to be trained."
   },
   {
     "objectID": "proposal.html#plan-of-attack",
     "href": "proposal.html#plan-of-attack",
-    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Plan of Attack",
     "text": "Plan of Attack\nAfter this week we have 3 weeks to complete our project and present it: so here are our goal outlines\n\nWeek 11: train our neural networks, attempting to tune the architecture of our model such that it is simple but produces high predictive test accuracy.\nWeek 12: write code for our website and link our code into the shiny app before peer review \nWeek 13: work with peer review to clean up our code for our presentation\nWeek 14/15: write up with blog post"
   },
   {
     "objectID": "proposal.html#project-repository-organization",
     "href": "proposal.html#project-repository-organization",
-    "title": "Project 2 Proposal: Cartoon Character Classification using Neural Networks",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "Project Repository Organization",
     "text": "Project Repository Organization\nThe project repository is organized as follows:\n\n/_freeze - Contains files relating to the website.\n/_site - Contains files relating to the website.\n/data - Contains the dataset of cartoon character images.\n/models - Stores the trained neural network models.\nabout.qmd - Project description to appear on website\nproposal.qmd - Project proposal\nindex.qmd - Project write-up\npresentation.qmd - Project presentation\n\nEach folder includes a README.md explaining the contents and structure."
   },
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "Your project title",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
     "section": "",
-    "text": "This project was developed by XX. For MATH/STAT241 at Reed College. The team is comprised of the following team members."
+    "text": "This project was developed by Elliott and Cameron. For MATH/STAT241 at Reed College. The team is comprised of the following team members, Elliott and Cameron.\nOur project aims to develop a neural network model capable of predicting and classifying our own generated data sets, utilizing the neuralnet and keras packages in R, in service of introducing the concept of neural networks to the class and exploring how neural networks can be trained in R, specifically in the context of computer vision and data set classification.\nThroughout our work we were able to showcase the predictive power of Neural networks, illustrating its strength in particularly complex but patterned data sets, while also explaining the downsides and future explorations of this powerful tool."
+  },
+  {
+    "objectID": "index.html#what-is-a-neural-network",
+    "href": "index.html#what-is-a-neural-network",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
+    "section": "What is a Neural Network?",
+    "text": "What is a Neural Network?\nA neural network machine learning algorithm modeled on the human brain and nervous system (hence NEURAL network). Neural networks contain a lattice of nodes, organized into layers, each of which can be thought of as its own linear regression model. Analogously, the ‘weights’ associated to a node can be viewed as slope coefficients and ‘biases’ can be viewed as the intercept terms. These weights and biases are assigned randomly at first, then iteratively changed to reduce the training error. Each additional node allows for a different linear relationships and adding more ‘layers’ of nodes allows for more flexible, non-linear relationships. Similar to decision trees, one can think of neural networks as ‘partitioning’ the predictor space into regions of certain classes (in the context of classification)."
+  },
+  {
+    "objectID": "presentation.html",
+    "href": "presentation.html",
+    "title": "Neural Networks",
+    "section": "",
+    "text": "Machine learning is fundamentally about exploiting patterns in data.\nDeep learning is a branch of ML which opts for huge expressive power, but losing almost all interpretability in the process.\nFor this project we will be exploring neural networks, mathematical structures which can (approximately) represent any function. Neural networks allow us to discover complex patterns in data that other models might not be able to predict."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
+    "section": "",
+    "text": "library(tidyverse)\nlibrary(neuralnet)\nlibrary(shiny)\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(cowplot)\nlibrary(knitr)"
+  },
+  {
+    "objectID": "index.html#discussion-and-conclusion",
+    "href": "index.html#discussion-and-conclusion",
+    "title": "Project 2 Proposal: Clasifying generated data using Neural Networks in R",
+    "section": "Discussion and Conclusion",
+    "text": "Discussion and Conclusion\nAs we showed, our neural networks were able to find the patterns in our data set relatively easily. The first three (Gauss, X, XY) data sets use pretty simple neural networks that didn’t take too long to train and were extremely accurate, getting accuracy all greater than 99%. The Spiral data set was much more complex, and needed a more complex neural network which required more time, but it was able to accurately (98%, with it actually being close to impossible to get 100% as some data points with different labels overlapped) label the data. We were able to show case these with our default values in our presentation and shiny app, with users able to use the shinny app to explore their own neural network architectures in order to see the impact on each data set. The caveat is that the spiral data set would often crash R if messed around with too much but the shinny app worked well with the other data sets. In conclusion we are very happy with our project and believe we adiquetly illustrated the power of neural networks\nThis was a pretty basic showcase of the power of Neural networks, but there’s so much that could be built off of what we’ve done. While working on this we discussed that what we were doing was not too far off of banknote security. As an extension, one could take a fraudulent bank note data set and see how well different network architectures would do on a bank note data set, or even more complex cyber security problems.\nFinally, displayed below is the code for a Shiny App that allows users to train their own neural networks on the four datasets we created.\n\nui &lt;- fluidPage(\n  titlePanel(\"Neural Networks Visualization\"),\n  sidebarLayout(\n    sidebarPanel(\n      selectInput(\"dataset\", \"Choose a dataset:\", choices = c(\"Gaussian distribution\" = \"data_two\",\n                                                             \"Horizontal split\" = \"data_by_x\", \n                                                             \"Quadrants\" = \"data_by_xy\", \n                                                             \"Spiral data\" = \"spiral_data\")),\n      selectInput(\"learningRate\", \"Choose Learning rate\", choices = c(\"default\",\n                                                                      \"0.3\", \n                                                                      \"0.01\", \n                                                                      \"0.003\", \n                                                                      \"0.001\", \n                                                                      \"0.0003\",\n                                                                      \"0.0001\")),\n      selectInput(\"HiddenLayers\", \"Choose Number of nodes in 2 layers:\", choices = c(\"default\",\n                                                                                 \"3\", \n                                                                                 \"4\", \n                                                                                 \"5\",\n                                                                                 \"6\",\n                                                                                 \"7\",\n                                                                                 \"8\",\n                                                                                 \"9\")),\n      actionButton(\"runModel\", \"Run Model\")\n    ),\n    mainPanel(\n      plotOutput(\"scatterPlot\")\n    )\n  )\n)\n\nserver &lt;- function(input, output) {\n  plotData &lt;- reactive({\n    \n    #basic pulls with default from above\n    if (input$HiddenLayers == \"default\" && input$learningRate == \"default\") {\n      # Choose which pre-generated plot to display based on the dataset\n      if (input$dataset == \"data_two\") {\n        p1\n      } else if (input$dataset == \"data_by_x\") {\n        p2\n      } else if (input$dataset == \"data_by_xy\") {\n        p3\n      } else {  # \"spiral_data\"\n        p4\n      }\n    } else {\n      \n      # Convert numeric if not 'default'\n      hidden_layers &lt;- ifelse(input$HiddenLayers != \"default\", rep(as.numeric(input$HiddenLayers), as.numeric(input$HiddenLayers)), c(5,5))\n      learning_rate &lt;- ifelse(input$learningRate != \"default\", as.numeric(input$learningRate), 0.01)\n\n      \n      # Dynamic model function\n      run_model &lt;- function(data, \n                            hidden=hidden_layers,\n                            rate=learning_rate) {\n                                                 neuralnet(label~x+y, \n                                                 data=data, \n                                                 hidden=hidden,\n                                                 learningrate=rate,\n                                                 linear.output=FALSE, \n                                                 stepmax=1e+06)\n      }\n\n      data_list &lt;- list(data_two = train1, data_by_x = train2, data_by_xy = train3, spiral_data = train4)\n\n      model &lt;- run_model(data_list[[input$dataset]])\n\n      \n      grid &lt;- generate_grid(data_list[[input$dataset]])\n      grid$pred_label &lt;- predict_grid(model, grid)$pred_label\n      plot_prediction(grid, data_list[[input$dataset]], paste(\"Model Predictions with LR =\", learning_rate, \", Hidden Layers =\", toString(hidden_layers)))\n    }\n  })\n\n  # Only update the output plot when the button is clicked, doesnt really work\n  observeEvent(input$runModel, {\n    output$scatterPlot &lt;- renderPlot({\n      plotData()\n    })\n  }, ignoreInit = TRUE)\n}\n\nshinyApp(ui = ui, server = server)"
   }
 ]
