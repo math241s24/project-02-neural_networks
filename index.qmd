@@ -221,7 +221,7 @@ prediction_label <- data.frame(max.col(pred)) %>%
 table(test1$label, prediction_label)
 ```
 
-This model produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points. 
+This model produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points.
 
 ```{r}
 check <- ifelse(test1$label == 'a', 1, 2) == max.col(pred)
@@ -247,7 +247,6 @@ ggplot(data_by_x, aes(x=x, y=y, color=factor(label))) +
   theme_minimal()
 ```
 
-
 Again, we will use a neural network with two hidden layers, each containing 5 nodes. The code for the model is displayed below, along with the architecture of the model, labeled with the weights and biases. Notice that despite the architecture of the model being the same as the previous model, the associated weights and biases are different!
 
 ```{r, echo=TRUE}
@@ -268,7 +267,8 @@ prediction_label <- data.frame(max.col(pred)) %>%
 table(test2$label, prediction_label)
 
 ```
-This model also produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points. 
+
+This model also produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points.
 
 ```{r}
 check <- ifelse(test2$label == 'a', 1, 2) == max.col(pred)
@@ -316,7 +316,7 @@ table(test3$label, prediction_label)
 
 ```
 
-This model also produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points. 
+This model also produced a test accuracy of 100%! Display below, we have the predictor space with the plotted data, and the partitions created by the model to classify the points.
 
 ```{r}
 check <- ifelse(test3$label == 'a', 1, 2) == max.col(pred)
@@ -370,6 +370,7 @@ check <- ifelse(test4$label == 'a', 1, 2) == max.col(pred)
 accuracy <- (sum(check)/nrow(test3))*100
 accuracy
 ```
+
 Displayed below is a visualization of the predictions our model is making:
 
 ```{r}
@@ -378,7 +379,6 @@ grid4_no_layers$pred_label <- predict_grid(model4_no_layers, grid4_no_layers)$pr
 p4_no_layers <- plot_prediction(grid4_no_layers, spiral_data, "Model 4 No Layers Predictions")
 p4_no_layers
 ```
-
 
 The second model has only one hidden layer with 5 nodes, a slightly more complex model than the previous one.
 
@@ -448,6 +448,7 @@ check <- ifelse(test4$label == 'a', 1, 2) == max.col(pred)
 accuracy <- (sum(check)/nrow(test3))*100
 accuracy
 ```
+
 The complexity of our model as well as the high predictive accuracy are reflected in the partitions of the predictor space.
 
 ```{r}
